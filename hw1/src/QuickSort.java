@@ -1,6 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 public class QuickSort {
@@ -9,7 +10,8 @@ public class QuickSort {
     private static int[] originalArray;
 
     private static String originalArrayFile = "original-array-file.txt";
-    private static String sortedArrayFile = "sorted-array-file.txt";
+    private static String quickSortArrayFile = "quicksorted-array-file.txt";
+    private static String medianQuickSortedArrayFile = "median-quicksorted-array-file.txt";
 
     private static void createRandomizedArray() {
         Random rd = new Random();
@@ -28,7 +30,9 @@ public class QuickSort {
         return copiedArray;
     }
 
-    // Quicksort method
+    /*
+     * "Original" quick sort method
+     */
     public void quickSort(int array[], int begin, int end) {
         if (begin < end) {
             int partitionIndex = partition(array, begin, end);
@@ -38,7 +42,9 @@ public class QuickSort {
         }
     }
 
-    // Partitioning method, uses last element as pivot
+    /*
+     * Partitioning method, uses last element as pivot
+     */
     private int partition(int array[], int begin, int end) {
         int pivot = array[end];
         int i = (begin - 1);
@@ -62,6 +68,44 @@ public class QuickSort {
         return i+1;
     }
 
+    /*
+     * Quicksort with median of 3
+     */
+    public void medianQuickSort(int array[], int low, int high) {
+        if (low >= high)
+            return ;
+        if (low < high) {
+            medianPivot(array, low, high);
+            quickSort(array, low, high);
+        }
+    }
+
+    /*
+     * create subarray with low, high, and middle elements in the array,
+     * sort the subarray and use index 1 as the median of 3
+     */
+    public int medianPivot(int array[], int low, int high) {
+        int first = array[low];
+        int last = array[array.length - 1];
+        int mid = (high) / 2;
+
+        int[] sortingArray = {array[low], array[mid], array[high]};
+        Arrays.sort(sortingArray);
+        int middleValue = sortingArray[1];
+
+        // swap with the last to serve as pivot
+        int temp = array[high];
+        array[high] = middleValue;
+        if (middleValue == array[low]) {
+            array[low] = temp;
+        } else if (middleValue == array[mid]) {
+            array[mid] = temp;
+        }
+
+        return partition(array, low, high);
+    }
+
+
     // prints out array to specified file name
     private static void printArrayToFile(int array[], String fileName) throws IOException {
         BufferedWriter outputWriter = null;
@@ -78,11 +122,15 @@ public class QuickSort {
     public static void main(String[] args) throws Exception {
         //run the class
         createRandomizedArray();
-        int[] copiedArray = copyArray(originalArray);
 
+        int[] copiedArray = copyArray(originalArray);
         QuickSort ob = new QuickSort();
         ob.quickSort(copiedArray, 0, copiedArray.length-1);
         printArrayToFile(originalArray, originalArrayFile);
-        printArrayToFile(copiedArray, sortedArrayFile);
+        printArrayToFile(copiedArray, quickSortArrayFile);
+
+        int[] medianArray = copyArray(originalArray);
+        ob.medianQuickSort(medianArray, 0, medianArray.length-1);
+        printArrayToFile(medianArray, medianQuickSortedArrayFile);
     }
 }
