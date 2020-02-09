@@ -1,45 +1,22 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Random;
 
 public class QuickSort {
 
-    private static int ARRAY_SIZE = 100;
-    private static int[] originalArray;
-    private static int LARGE_REGION = 11;
-
-    private static String originalArrayFile = "original-array-file.txt";
-    private static String quickSortArrayFile = "quicksorted-array-file.txt";
-    private static String medianQuickSortedArrayFile = "median-quicksorted-array-file.txt";
-
-    private static void createRandomizedArray() {
-        Random rd = new Random();
-        originalArray = new int[ARRAY_SIZE];
-
-        for (int i = 0; i < originalArray.length; i++) {
-            originalArray[i] = rd.nextInt();
-        }
-    }
-
-    private static int[] copyArray(int[] originalArray) {
-        int size = originalArray.length;
-        int[] copiedArray = new int[size];
-        System.arraycopy(originalArray, 0, copiedArray, 0, size);
-
-        return copiedArray;
+    private static void swap (int array[], int position1, int position2) {
+        int temp = array[position1];
+        array[position1] = array[position2];
+        array[position2] = temp;
     }
 
     /*
      * "Original" quick sort method
      */
-    public void quickSort(int array[], int begin, int end) {
-        if (begin < end) {
-            int partitionIndex = partition(array, begin, end);
+    public void quickSort(int array[], int low, int high) {
+        if (low < high) {
+            int partitionIndex = partition(array, low, high);
 
-            quickSort(array, begin, partitionIndex - 1);
-            quickSort(array, partitionIndex + 1, end);
+            quickSort(array, low, partitionIndex - 1);
+            quickSort(array, partitionIndex + 1, high);
         }
     }
 
@@ -54,17 +31,11 @@ public class QuickSort {
             // if current element is smaller than pivot
             if (array[j] <= pivot) {
                 i++;
-
-                // swap array[i] and array[j]
-                int swapTemp = array[i];
-                array[i] = array[j];
-                array[j] = swapTemp;
+                swap(array, i, j);
             }
         }
         // swap array[i+1] and array[end] (or pivot)
-        int swapTemp = array[i+1];
-        array[i+1] = array[end];
-        array[end] = swapTemp;
+        swap(array, i+1, end);
 
         return i+1;
     }
@@ -106,7 +77,12 @@ public class QuickSort {
         return partition(array, low, high);
     }
 
-    public void insertionSort(int array[]) {
+    public void quickSortAndInsertionSort(int array[], int largeRegion) {
+        quickSort(array, 0, largeRegion);
+        insertionSort(array);
+    }
+
+    private void insertionSort(int array[]) {
         for (int i = 1; i < array.length; i++) {
             int key = array[i];
             int j = i - 1;
@@ -123,15 +99,13 @@ public class QuickSort {
         }
     }
 
-    public void quickSortAndInsertionSort(int array[]) {
-        quickSort(array, 0, LARGE_REGION);
-        insertionSort(array);
-    }
+    public void quickSortWithLomutos(int array[], int low, int high) {
+        if (low < high) {
+            int partitionIndex = lomutosPartition(array, low, high);
 
-    private static void swap (int array[], int position1, int position2) {
-        int temp = array[position1];
-        array[position1] = array[position2];
-        array[position2] = temp;
+            quickSort(array, low, partitionIndex - 1);
+            quickSort(array, partitionIndex + 1, high);
+        }
     }
 
     /*
@@ -156,11 +130,11 @@ public class QuickSort {
         return (i+1);
     }
 
-    public void quickSortWithLomutos(int array[], int low, int high) {
+    public void quickSortWithHoares(int array[], int low, int high) {
         if (low < high) {
-            int partitionIndex = lomutosPartition(array, low, high);
+            int partitionIndex = hoaresPartition(array, low, high);
 
-            quickSort(array, low, partitionIndex - 1);
+            quickSort(array, low, partitionIndex);
             quickSort(array, partitionIndex + 1, high);
         }
     }
@@ -187,60 +161,5 @@ public class QuickSort {
             }
             swap(array, i, j);
         }
-    }
-
-    public void quickSortWithHoares(int array[], int low, int high) {
-        if (low < high) {
-            int partitionIndex = hoaresPartition(array, low, high);
-
-            quickSort(array, low, partitionIndex);
-            quickSort(array, partitionIndex + 1, high);
-        }
-    }
-
-    /*
-     * prints out array to specified file name
-     */
-    private static void printArrayToFile(int array[], String fileName) throws IOException {
-        BufferedWriter outputWriter = null;
-        outputWriter = new BufferedWriter(new FileWriter(fileName));
-
-        for (int i = 0; i < array.length; i++) {
-            outputWriter.write(Integer.toString(array[i]));
-            outputWriter.newLine();
-        }
-        outputWriter.flush();
-        outputWriter.close();
-    }
-
-    public static void main(String[] args) throws Exception {
-        //run the class
-        createRandomizedArray();
-
-        int[] copiedArray = copyArray(originalArray);
-        QuickSort ob = new QuickSort();
-        ob.quickSort(copiedArray, 0, copiedArray.length-1);
-        printArrayToFile(originalArray, originalArrayFile);
-        printArrayToFile(copiedArray, quickSortArrayFile);
-
-        int[] medianArray = copyArray(originalArray);
-        ob.medianQuickSort(medianArray, 0, medianArray.length-1);
-        printArrayToFile(medianArray, medianQuickSortedArrayFile);
-
-        int[] insertionArray = copyArray(originalArray);
-        ob.insertionSort(insertionArray);
-        printArrayToFile(insertionArray, "insertion-array-file.txt");
-
-        int[] quicksortAndInsertionArray = copyArray(originalArray);
-        ob.quickSortAndInsertionSort(quicksortAndInsertionArray);
-        printArrayToFile(quicksortAndInsertionArray, "quicksort-and-insertion-array-file.txt");
-
-        int[] lomutoArray = copyArray(originalArray);
-        ob.quickSortWithLomutos(lomutoArray, 0, lomutoArray.length-1);
-        printArrayToFile(lomutoArray, "lomuto-array-file.txt");
-
-        int[] hoareArray = copyArray(originalArray);
-        ob.quickSortWithHoares(hoareArray, 0, hoareArray.length-1);
-        printArrayToFile(hoareArray, "hoare-array-file.txt");
     }
 }
