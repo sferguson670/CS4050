@@ -165,6 +165,39 @@ public class QuickSort {
         }
     }
 
+    private int hoaresPartition(int array[], int low, int high) {
+        int pivot = array[low];
+        int i = low - 1;
+        int j = high + 1;
+
+        while (true) {
+            // find leftmost element greater than or equal to pivot
+            do {
+                i++;
+            } while (array[i] < pivot);
+
+            // find rightmost element smaller than or equal to pivot
+            do {
+                j--;
+            } while (array[j] > pivot);
+
+            // if 2 pointers meet
+            if (i >= j) {
+                return j;
+            }
+            swap(array, i, j);
+        }
+    }
+
+    public void quickSortWithHoares(int array[], int low, int high) {
+        if (low < high) {
+            int partitionIndex = hoaresPartition(array, low, high);
+
+            quickSort(array, low, partitionIndex);
+            quickSort(array, partitionIndex + 1, high);
+        }
+    }
+
     /*
      * prints out array to specified file name
      */
@@ -205,5 +238,9 @@ public class QuickSort {
         int[] lomutoArray = copyArray(originalArray);
         ob.quickSortWithLomutos(lomutoArray, 0, lomutoArray.length-1);
         printArrayToFile(lomutoArray, "lomuto-array-file.txt");
+
+        int[] hoareArray = copyArray(originalArray);
+        ob.quickSortWithHoares(hoareArray, 0, hoareArray.length-1);
+        printArrayToFile(hoareArray, "hoare-array-file.txt");
     }
 }
