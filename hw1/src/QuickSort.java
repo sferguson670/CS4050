@@ -128,6 +128,43 @@ public class QuickSort {
         insertionSort(array);
     }
 
+    private static void swap (int array[], int position1, int position2) {
+        int temp = array[position1];
+        array[position1] = array[position2];
+        array[position2] = temp;
+    }
+
+    /*
+     * takes last element as pivot, places the pivot element in correct position in sorted array,
+     * places all smaller than pivot to left of pivot
+     * and all greater elements than pivot to right of pivot
+     */
+    private int lomutosPartition(int array[], int low, int high) {
+        int pivot = array[high];
+
+        int i = (low - 1);
+
+        for (int j = low; j <= high - 1; j++) {
+            // if current element is <= to pivot
+            if (array[j] <= pivot)
+            {
+                i++;
+                swap(array, i, j);
+            }
+        }
+        swap (array, i+1, high);
+        return (i+1);
+    }
+
+    public void quickSortWithLomutos(int array[], int low, int high) {
+        if (low < high) {
+            int partitionIndex = lomutosPartition(array, low, high);
+
+            quickSort(array, low, partitionIndex - 1);
+            quickSort(array, partitionIndex + 1, high);
+        }
+    }
+
     /*
      * prints out array to specified file name
      */
@@ -164,5 +201,9 @@ public class QuickSort {
         int[] quicksortAndInsertionArray = copyArray(originalArray);
         ob.quickSortAndInsertionSort(quicksortAndInsertionArray);
         printArrayToFile(quicksortAndInsertionArray, "quicksort-and-insertion-array-file.txt");
+
+        int[] lomutoArray = copyArray(originalArray);
+        ob.quickSortWithLomutos(lomutoArray, 0, lomutoArray.length-1);
+        printArrayToFile(lomutoArray, "lomuto-array-file.txt");
     }
 }
