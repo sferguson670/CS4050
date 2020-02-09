@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.util.Random;
 
 public class Sorts {
-    private static int ARRAY_SIZE = 100;
     private static int[] originalArray;
+
+    private static int ARRAY_SIZE = 100;
     private static int LARGE_REGION = 11;
 
-    private static String originalArrayFile = "original-array-file.txt";
+    private static String originalArrayFile = "original-unsorted-array.txt";
     private static String quickSortArrayFile = "quicksorted-array-file.txt";
     private static String medianQuickSortedArrayFile = "median-quicksorted-array-file.txt";
+    private static String quickSortAndInsertionArrayFile = "quicksorted-insertion-array-file.txt";
+    private static String quickSortLomutosPartitionArrayFile = "quicksorted-lomutos-array-file.txt";
+    private static String quickSortHoarePartitionArrayFile = "quicksorted-hoare-array-file.txt";
 
     private static void createRandomizedArray() {
         Random rd = new Random();
@@ -34,7 +38,7 @@ public class Sorts {
      */
     private static void printArrayToFile(int array[], String fileName) throws IOException {
         BufferedWriter outputWriter = null;
-        outputWriter = new BufferedWriter(new FileWriter(fileName));
+        outputWriter = new BufferedWriter(new FileWriter("./array-files/" + fileName));
 
         for (int i = 0; i < array.length; i++) {
             outputWriter.write(Integer.toString(array[i]));
@@ -44,29 +48,37 @@ public class Sorts {
         outputWriter.close();
     }
 
+    private static Long getSystemTime() {
+        return System.nanoTime();
+    }
+
+    private static Long timeTaken (Long first, Long end) {
+        return end - first;
+    }
+
     public static void main(String[] args) throws Exception {
         createRandomizedArray();
-
-        int[] copiedArray = copyArray(originalArray);
-        QuickSort ob = new QuickSort();
-        ob.quickSort(copiedArray, 0, copiedArray.length-1);
         printArrayToFile(originalArray, originalArrayFile);
-        printArrayToFile(copiedArray, quickSortArrayFile);
+        QuickSort ob = new QuickSort();
+
+        int[] quicksortArray = copyArray(originalArray);
+        ob.quickSort(quicksortArray, 0, quicksortArray.length-1);
+        printArrayToFile(quicksortArray, quickSortArrayFile);
 
         int[] medianArray = copyArray(originalArray);
         ob.medianQuickSort(medianArray, 0, medianArray.length-1);
         printArrayToFile(medianArray, medianQuickSortedArrayFile);
 
-        int[] quicksortAndInsertionArray = copyArray(originalArray);
-        ob.quickSortAndInsertionSort(quicksortAndInsertionArray, LARGE_REGION);
-        printArrayToFile(quicksortAndInsertionArray, "quicksort-and-insertion-array-file.txt");
+        int[] quicksortInsertionArray = copyArray(originalArray);
+        ob.quickSortAndInsertionSort(quicksortInsertionArray, LARGE_REGION);
+        printArrayToFile(quicksortInsertionArray, quickSortAndInsertionArrayFile);
 
         int[] lomutoArray = copyArray(originalArray);
         ob.quickSortWithLomutos(lomutoArray, 0, lomutoArray.length-1);
-        printArrayToFile(lomutoArray, "lomuto-array-file.txt");
+        printArrayToFile(lomutoArray, quickSortLomutosPartitionArrayFile);
 
         int[] hoareArray = copyArray(originalArray);
         ob.quickSortWithHoares(hoareArray, 0, hoareArray.length-1);
-        printArrayToFile(hoareArray, "hoare-array-file.txt");
+        printArrayToFile(hoareArray, quickSortHoarePartitionArrayFile);
     }
 }
