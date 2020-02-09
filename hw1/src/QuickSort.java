@@ -105,8 +105,26 @@ public class QuickSort {
         return partition(array, low, high);
     }
 
+    public void insertionSort(int array[]) {
+        for (int i = 1; i < array.length; i++) {
+            int key = array[i];
+            int j = i - 1;
 
-    // prints out array to specified file name
+            /*
+             * move elements of array[0..i-1], that are greater than key,
+             * to one position ahead of their current position
+             */
+            while (j >= 0 && array[j] > key) {
+                array[j + 1] = array[j];
+                j = j - 1;
+            }
+            array[j + 1] = key;
+        }
+    }
+
+    /*
+     * prints out array to specified file name
+     */
     private static void printArrayToFile(int array[], String fileName) throws IOException {
         BufferedWriter outputWriter = null;
         outputWriter = new BufferedWriter(new FileWriter(fileName));
@@ -132,5 +150,9 @@ public class QuickSort {
         int[] medianArray = copyArray(originalArray);
         ob.medianQuickSort(medianArray, 0, medianArray.length-1);
         printArrayToFile(medianArray, medianQuickSortedArrayFile);
+
+        int[] insertionArray = copyArray(originalArray);
+        ob.insertionSort(insertionArray);
+        printArrayToFile(insertionArray, "insertion-array-file.txt");
     }
 }
