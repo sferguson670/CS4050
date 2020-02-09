@@ -8,6 +8,7 @@ public class QuickSort {
 
     private static int ARRAY_SIZE = 100;
     private static int[] originalArray;
+    private static int LARGE_REGION = 11;
 
     private static String originalArrayFile = "original-array-file.txt";
     private static String quickSortArrayFile = "quicksorted-array-file.txt";
@@ -122,6 +123,11 @@ public class QuickSort {
         }
     }
 
+    public void quickSortAndInsertionSort(int array[]) {
+        quickSort(array, 0, LARGE_REGION);
+        insertionSort(array);
+    }
+
     /*
      * prints out array to specified file name
      */
@@ -154,5 +160,9 @@ public class QuickSort {
         int[] insertionArray = copyArray(originalArray);
         ob.insertionSort(insertionArray);
         printArrayToFile(insertionArray, "insertion-array-file.txt");
+
+        int[] quicksortAndInsertionArray = copyArray(originalArray);
+        ob.quickSortAndInsertionSort(quicksortAndInsertionArray);
+        printArrayToFile(quicksortAndInsertionArray, "quicksort-and-insertion-array-file.txt");
     }
 }
