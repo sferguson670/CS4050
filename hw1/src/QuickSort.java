@@ -78,7 +78,7 @@ public class QuickSort {
     }
 
     public void quickSortAndInsertionSort(int array[], int largeRegion) {
-        quickSort(array, 0, largeRegion);
+        quickSort(array, 0, array.length - largeRegion);
         insertionSort(array);
     }
 
