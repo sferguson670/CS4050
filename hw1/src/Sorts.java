@@ -97,3 +97,15 @@ public class Sorts {
         printArrayToFile(hoareArray, quickSortHoarePartitionArrayFile);
     }
 }
+
+/*
+ * references used:
+ * https://www.tutorialspoint.com/Array-Copy-in-Java
+ * https://www.tutorialspoint.com/generate-a-random-array-of-integers-in-java
+ * https://examples.javacodegeeks.com/quicksort-java-algorithm-code-example/
+ * https://gist.github.com/epomp447/4c0d0676d9f013788647cbe6e60ae0df
+ * https://stackoverflow.com/questions/13707223/how-to-write-an-array-to-a-file-java
+ * https://www.geeksforgeeks.org/insertion-sort/
+ * https://www.geeksforgeeks.org/hoares-vs-lomuto-partition-scheme-quicksort/
+ * https://www.baeldung.com/java-quicksort
+ */
