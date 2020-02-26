@@ -6,20 +6,61 @@
  */
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
 public class Tree {
-    private class Node {
-        Character letter;
+
+    /*
+     * Represents a node of a tree
+     */
+    class Node {
+        String letter;
         Vector<Node> child = new Vector<>();
     }
 
-    public Node newNode(Character letter) {
+    /*
+     * Creates a new node, where it stores a letter in it
+     */
+    public Node newNode(String letter) {
         Node temp = new Node();
         temp.letter = letter;
         return temp;
     }
+
+    /*
+     * Takes the parent node, and returns the specified position child node
+     */
+    public Node getSpecifiedChild(Node parent, int pos) {
+        if (parent == null)
+            return null;
+
+        int size = parent.child.size();
+        if (pos > size - 1)
+            return null;
+
+        return parent.child.get(pos);
+    }
+
+    /*
+     * returns a list of all the children of a node,
+     * in the format of what letter they contain
+     */
+    public List<String> getChildrenLetters(Node node) {
+        List<String> children = new LinkedList<>();
+
+        if (node == null)
+            children = null;
+
+        int size = node.child.size();
+        for (int i = 0; i < size; i++) {
+            children.add(node.child.get(i).letter);
+        }
+
+        return children;
+    }
+
 
     public void LevelOrderTraversal(Node root) {
         if (root == null)
