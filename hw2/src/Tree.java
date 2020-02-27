@@ -30,7 +30,7 @@ public class Tree {
     }
 
     /*
-     * Takes the parent node, and returns the specified position child node
+     * Takes the parent node, and returns child node at specified position
      */
     public Node getSpecifiedChild(Node parent, int pos) {
         if (parent == null)
@@ -41,6 +41,13 @@ public class Tree {
             return null;
 
         return parent.child.get(pos);
+    }
+
+    /*
+     * Takes the parent node, and returns the position of the specified child node
+     */
+    public int getPositionOfSpecifiedChild(Node node, String letter) {
+       return getChildrenLetters(node).indexOf(letter);
     }
 
     /*

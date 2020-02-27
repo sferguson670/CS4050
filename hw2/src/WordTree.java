@@ -51,17 +51,21 @@ public class WordTree {
      * to signal the end of the word, the last node will be *
      */
     private void fillInTree(String word) {
-        int position = 0;
-        List<String> firstLetters = genericTree.getChildrenLetters(root);
-        if (!firstLetters.contains(word.substring(0,1))) {
-            root.child.add(genericTree.newNode(word.substring(0,1)));
-            while (position < word.length()) {
-                //Tree.Node nodeAtPosition =
+        List<String> nodeLetters = genericTree.getChildrenLetters(root);
+        Tree.Node node = root;
+        for (int i = 0; i < word.length(); i++) {
+            String letter = word.substring(i, i+1);
+            if (!genericTree.getChildrenLetters(node).contains(letter)) {
+                node.child.add(genericTree.newNode(letter));
             }
-        } else {
-            int pos = firstLetters.indexOf(word.substring(0,1));
-            Tree.Node specifiedChild = genericTree.getSpecifiedChild(root, pos);
+            nodeLetters = genericTree.getChildrenLetters(node);
+            System.out.println(genericTree.getChildrenLetters(node));
+            int pos = genericTree.getPositionOfSpecifiedChild(node, letter);
+            node = genericTree.getSpecifiedChild(node, pos);
+
         }
+
+        genericTree.LevelOrderTraversal(root);
     }
 
     /*
@@ -101,6 +105,8 @@ public class WordTree {
         WordTree runner = new WordTree();
         runner.createTree();
         runner.fillInTree("hi");
+        runner.fillInTree("hello");
+        runner.fillInTree("watup");
     }
 }
 
