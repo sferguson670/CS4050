@@ -26,7 +26,7 @@ public class WordTree {
      */
     private Tree.Node createTree() {
         genericTree = new Tree();
-        return root = genericTree.newNode("Root");
+        return root = genericTree.createRootNode();
     }
 
     /*
@@ -38,7 +38,7 @@ public class WordTree {
         File file = new File(FILENAME);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
-        String word = null;
+        String word = "";
         while ((word=br.readLine())!=null) {
             fillInTree(word);
         }
@@ -116,6 +116,8 @@ public class WordTree {
     private static String getCharaFromConsole() {
         Scanner sc = new Scanner(System.in);
         Character c = sc.next().charAt(0);
+
+        // checks if user inputs '*' to signal end of word or non-alphabetical value
         if (c.charValue() == 42) {
             return "*";
         } else if (!Character.isAlphabetic(c)) {
