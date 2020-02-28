@@ -30,6 +30,39 @@ public class Tree {
     }
 
     /*
+     * Creates the root node, where "Root" is stored in it
+     */
+    public Node createRootNode() {
+        Node temp = new Node();
+        temp.letter = "Root";
+        return temp;
+    }
+
+    /*
+     * Takes the parent node, and returns the position of the specified child node
+     */
+    public int getNumberofChildren(Node node) {
+        return node.child.size();
+    }
+
+    /*
+     * Takes the parent node, and returns first child node
+     */
+    public Node getFirstChild(Node parent) {
+        if (parent == null)
+            return null;
+
+        return parent.child.get(0);
+    }
+
+    /*
+     * Takes the parent node, and returns the position of the specified child node
+     */
+    public int getPositionOfSpecifiedChild(Node node, String letter) {
+        return getChildrenLetters(node).indexOf(letter);
+    }
+
+    /*
      * Takes the parent node, and returns child node at specified position
      */
     public Node getSpecifiedChild(Node parent, int pos) {
@@ -44,10 +77,21 @@ public class Tree {
     }
 
     /*
-     * Takes the parent node, and returns the position of the specified child node
+     * returns a list of all the children of a node,
+     * in the format of the nodes
      */
-    public int getPositionOfSpecifiedChild(Node node, String letter) {
-       return getChildrenLetters(node).indexOf(letter);
+    public List<Node> getChildrenNodes(Node parent) {
+        List<Node> children = new LinkedList<>();
+
+        if (parent == null)
+            children = null;
+
+        int size = parent.child.size();
+        for (int i = 0; i < size; i++) {
+            children.add(parent.child.get(i));
+        }
+
+        return children;
     }
 
     /*
@@ -67,7 +111,6 @@ public class Tree {
 
         return children;
     }
-
 
     public void LevelOrderTraversal(Node root) {
         if (root == null)
