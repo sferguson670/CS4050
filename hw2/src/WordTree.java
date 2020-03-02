@@ -77,26 +77,24 @@ public class WordTree {
         }
     }
 
-    private List<String> getWordsFromNode(Tree.Node parent, String letter) {
-        String word = letter;
-        int pos;
-        Tree.Node node = parent;
+    private void printPreOrder(Tree.Node parent) {
+        if (parent == null)
+            return ;
 
-        List<String> childrenLetters = genericTree.getChildrenLetters(parent);
-        List<String> words = new LinkedList<>();
+        System.out.println(parent.letter);
 
-        if (!childrenLetters.contains(letter)) {
-            words = null;
-        } else {
-            for (int i = 0; i < childrenLetters.size(); i++) {
-                while (!node.child.isEmpty()) {
-                    pos = 0;
-                    node = genericTree.getSpecifiedChild(parent, pos);
-                    word += node.letter;
-                }
-                words.add(word);
-            }
+        for (int i = 0; i < parent.child.size(); i++) {
+            printPreOrder(parent.child.get(i));
         }
+    }
+
+    /*
+     * Traverses the parent node and returns all words from that node,
+     * does it in a pre-order fashion
+     */
+    private List<String> getWordsFromTree() {
+        //List<String> childrenLetters = genericTree.getChildrenLetters(parent);
+        List<String> words = new LinkedList<>();
 
         return words;
     }
@@ -127,6 +125,10 @@ public class WordTree {
         return c.toString();
     }
 
+    /*
+     * Returns a string to represent what the user is inputted,
+     * concat each character entered into one word
+     */
     private static String getWordFromConsole() {
         commandLinePrompt();
 
@@ -156,30 +158,13 @@ public class WordTree {
      */
     private List<String> getAutofillResults(String word) {
         List<String> autofillResults = new LinkedList<>();
-        int pos;
 
-        // starts off with root node and gets all of it's children in a list to check against
-        List<String> nodeLetters = genericTree.getChildrenLetters(root);
-        Tree.Node node = root;
+        return autofillResults;
+    }
 
-        // goes through each letter of the word, and checks if it exists as as the node's child
-        for (int i = 0; i < word.length(); i++) {
-            String letter = word.substring(i, i + 1);
-
-            // if it doesn't exist, then it will return nothing
-            if (!genericTree.getChildrenLetters(node).contains(letter)) {
-                autofillResults = null;
-                break;
-            }
-
-            // if exists, gets up to 10 first words to return
-            // reassigns the nodeLetters and node to the next node, which is the child to previous
-            nodeLetters = genericTree.getChildrenLetters(node);
-            pos = genericTree.getPositionOfSpecifiedChild(node, letter);
-            node = genericTree.getSpecifiedChild(node, pos);
-        }
-
-            return autofillResults;
+    private void hithere() {
+        printPreOrder(root);
+        System.out.println(genericTree.getSpecifiedChildFromWord(root, "Hello").child.get(0).letter);
     }
 
     /*
@@ -189,6 +174,11 @@ public class WordTree {
         WordTree runner = new WordTree();
         runner.createTree();
         runner.readWordsFromFile();
+        runner.fillInTree("hi");
+        runner.fillInTree("hihihihi");
+        runner.fillInTree("Hellos");
+        runner.fillInTree("watup");
+        runner.hithere();
     }
 }
 
@@ -196,4 +186,6 @@ public class WordTree {
  * references used:
  * https://www.geeksforgeeks.org/binary-tree-set-1-introduction/
  * https://www.tutorialspoint.com/how-to-check-if-a-given-character-is-a-number-letter-in-java
+ * https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+ * https://www.geeksforgeeks.org/level-order-tree-traversal/
  */

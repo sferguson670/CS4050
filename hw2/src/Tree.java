@@ -77,6 +77,27 @@ public class Tree {
     }
 
     /*
+     * Traverses the tree and returns the last node from the word inputted
+     */
+    public Node getSpecifiedChildFromWord(Node root, String word) {
+        Node node = root;
+        List<String> nodeChildren = getChildrenLetters(node);
+        for (int i = 0; i < word.length(); i++) {
+            String letter = word.substring(i, i+1);
+            if (nodeChildren.contains(letter)) {
+                int pos = getPositionOfSpecifiedChild(node, letter);
+                node = node.child.get(pos);
+                nodeChildren = getChildrenLetters(node);
+            } else {
+                node = null;
+                break;
+            }
+        }
+
+        return node;
+    }
+
+    /*
      * returns a list of all the children of a node,
      * in the format of the nodes
      */
