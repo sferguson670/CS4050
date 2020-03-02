@@ -88,6 +88,27 @@ public class WordTree {
         }
     }
 
+    private void printInOrder(Tree.Node parent) {
+        if (parent == null)
+            return ;
+
+        for (int i = 0; i < parent.child.size(); i++) {
+            printPreOrder(parent.child.get(i));
+            System.out.println(parent.letter);
+        }
+    }
+
+    private void printPostOrder(Tree.Node parent) {
+        if (parent == null)
+            return ;
+
+        for (int i = 0; i < parent.child.size(); i++) {
+            printPostOrder(parent.child.get(i));
+        }
+
+        System.out.println(parent.letter);
+    }
+
     /*
      * Traverses the parent node and returns all words from that node,
      * does it in a pre-order fashion
@@ -164,7 +185,8 @@ public class WordTree {
 
     private void hithere() {
         printPreOrder(root);
-        System.out.println(genericTree.getSpecifiedChildFromWord(root, "Hello").child.get(0).letter);
+        System.out.println("space");
+        printInOrder(root);
     }
 
     /*
