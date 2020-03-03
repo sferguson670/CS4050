@@ -18,14 +18,16 @@ public class Tree {
     class Node {
         String letter;
         Vector<Node> child = new Vector<>();
+        Boolean isEnd = false;
     }
 
     /*
      * Creates a new node, where it stores a letter in it
      */
-    public Node newNode(String letter) {
+    public Node newNode(String letter, Boolean isEnd) {
         Node temp = new Node();
         temp.letter = letter;
+        temp.isEnd = isEnd;
         return temp;
     }
 
@@ -35,6 +37,7 @@ public class Tree {
     public Node createRootNode() {
         Node temp = new Node();
         temp.letter = "Root";
+        temp.isEnd = false;
         return temp;
     }
 
@@ -43,16 +46,6 @@ public class Tree {
      */
     public int getNumberofChildren(Node node) {
         return node.child.size();
-    }
-
-    /*
-     * Takes the parent node, and returns first child node
-     */
-    public Node getFirstChild(Node parent) {
-        if (parent == null)
-            return null;
-
-        return parent.child.get(0);
     }
 
     /*
@@ -65,9 +58,11 @@ public class Tree {
     /*
      * Takes the parent node, and returns child node at specified position
      */
-    public Node getSpecifiedChild(Node parent, int pos) {
+    public Node getSpecifiedChild(Node parent, String chara) {
         if (parent == null)
             return null;
+
+        int pos = getPositionOfSpecifiedChild(parent, chara);
 
         int size = parent.child.size();
         if (pos > size - 1)

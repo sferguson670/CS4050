@@ -41,6 +41,7 @@ public class WordTree {
         String word = "";
         while ((word=br.readLine())!=null) {
             fillInTree(word);
+            System.out.println(word);
         }
         fr.close();
     }
@@ -62,19 +63,43 @@ public class WordTree {
 
             // if it doesn't exist, then it will add the letter as a child to the node
             if (!genericTree.getChildrenLetters(node).contains(letter)) {
-                node.child.add(genericTree.newNode(letter));
+                // at the end of the word, change isEnd to true to signify the end of the word
+                if (i == word.length() - 1)  {
+                    node.child.add(genericTree.newNode(letter, true));
+                } else {
+                    node.child.add(genericTree.newNode(letter, false));
+                }
             }
 
             // reassigns the nodeLetters and node to the next node, which is the child to previous
             nodeLetters = genericTree.getChildrenLetters(node);
-            int pos = genericTree.getPositionOfSpecifiedChild(node, letter);
-            node = genericTree.getSpecifiedChild(node, pos);
+            node = genericTree.getSpecifiedChild(node, letter);
+        }
+    }
 
-            // at the end of the word, add a "*" at the end to signify the end of the word
-            if (i == word.length() - 1 ) {
-                node.child.add(genericTree.newNode("*"));
+    private List<String> lettersToWords(List<String> letters) {
+        List<String> words = new LinkedList<>();
+        String word = "";
+        for (int i = 0; i < letters.size(); i++) {
+            if (letters.get(i).contains("*")) {
+                words.add(word);
+                word = "";
+            } else {
+                word += letters.get(i);
             }
         }
+        return words;
+    }
+
+    private void printPostOrder(Tree.Node parent) {
+        if (parent == null)
+            return ;
+
+        for (int i = 0; i < parent.child.size(); i++) {
+            printPostOrder(parent.child.get(i));
+        }
+
+        System.out.println(parent.letter);
     }
 
     private void printPreOrder(Tree.Node parent) {
@@ -96,17 +121,7 @@ public class WordTree {
             printPreOrder(parent.child.get(i));
             System.out.println(parent.letter);
         }
-    }
 
-    private void printPostOrder(Tree.Node parent) {
-        if (parent == null)
-            return ;
-
-        for (int i = 0; i < parent.child.size(); i++) {
-            printPostOrder(parent.child.get(i));
-        }
-
-        System.out.println(parent.letter);
     }
 
     /*
@@ -187,6 +202,8 @@ public class WordTree {
         printPreOrder(root);
         System.out.println("space");
         printInOrder(root);
+        System.out.println("space");
+        //printPostOrder(root);
     }
 
     /*
@@ -196,10 +213,10 @@ public class WordTree {
         WordTree runner = new WordTree();
         runner.createTree();
         runner.readWordsFromFile();
-        runner.fillInTree("hi");
-        runner.fillInTree("hihihihi");
-        runner.fillInTree("Hellos");
-        runner.fillInTree("watup");
+        //runner.fillInTree("hi");
+        //runner.fillInTree("hihihihi");
+        //runner.fillInTree("Hellos");
+        //runner.fillInTree("watup");
         runner.hithere();
     }
 }
@@ -210,4 +227,5 @@ public class WordTree {
  * https://www.tutorialspoint.com/how-to-check-if-a-given-character-is-a-number-letter-in-java
  * https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
  * https://www.geeksforgeeks.org/level-order-tree-traversal/
+ * https://www.lavivienpost.com/autocomplete-with-trie-code/
  */
