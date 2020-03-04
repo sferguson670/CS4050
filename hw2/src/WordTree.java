@@ -9,7 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,7 +17,6 @@ public class WordTree {
 
     private Tree genericTree;
     private Tree.Node root;
-
     private String FILENAME = "words.txt";
 
     /*
@@ -38,101 +37,45 @@ public class WordTree {
         File file = new File(FILENAME);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
-        String word = "";
+        String word;
         while ((word=br.readLine())!=null) {
             fillInTree(word);
-            System.out.println(word);
         }
         fr.close();
     }
 
     /*
-     * Each word is broken into each character,
+     * Each word is broken into each character (all lowercase),
      * each character is a child node to the previous letter
      * to signal the end of the word, the last node will be *
      * ex) Root -> H -> E -> L -> L -> O -> *
      */
     private void fillInTree(String word) {
+        // if word already exists, then do nothing
+        if (genericTree.searchTree(word.toLowerCase(), root)) {
+            return ;
+        }
+
         // starts off with root node and gets all of it's children in a list to check against
         List<String> nodeLetters = genericTree.getChildrenLetters(root);
         Tree.Node node = root;
 
         // goes through each letter of the word, and checks if it exists as as the node's child
         for (int i = 0; i < word.length(); i++) {
-            String letter = word.substring(i, i+1);
+            String letter = word.substring(i, i+1).toLowerCase();
 
             // if it doesn't exist, then it will add the letter as a child to the node
             if (!genericTree.getChildrenLetters(node).contains(letter)) {
-                // at the end of the word, change isEnd to true to signify the end of the word
-                if (i == word.length() - 1)  {
-                    node.child.add(genericTree.newNode(letter, true));
-                } else {
-                    node.child.add(genericTree.newNode(letter, false));
-                }
+                node.child.add(genericTree.newNode(letter, false));
             }
 
             // reassigns the nodeLetters and node to the next node, which is the child to previous
             nodeLetters = genericTree.getChildrenLetters(node);
             node = genericTree.getSpecifiedChild(node, letter);
         }
-    }
 
-    private List<String> lettersToWords(List<String> letters) {
-        List<String> words = new LinkedList<>();
-        String word = "";
-        for (int i = 0; i < letters.size(); i++) {
-            if (letters.get(i).contains("*")) {
-                words.add(word);
-                word = "";
-            } else {
-                word += letters.get(i);
-            }
-        }
-        return words;
-    }
-
-    private void printPostOrder(Tree.Node parent) {
-        if (parent == null)
-            return ;
-
-        for (int i = 0; i < parent.child.size(); i++) {
-            printPostOrder(parent.child.get(i));
-        }
-
-        System.out.println(parent.letter);
-    }
-
-    private void printPreOrder(Tree.Node parent) {
-        if (parent == null)
-            return ;
-
-        System.out.println(parent.letter);
-
-        for (int i = 0; i < parent.child.size(); i++) {
-            printPreOrder(parent.child.get(i));
-        }
-    }
-
-    private void printInOrder(Tree.Node parent) {
-        if (parent == null)
-            return ;
-
-        for (int i = 0; i < parent.child.size(); i++) {
-            printPreOrder(parent.child.get(i));
-            System.out.println(parent.letter);
-        }
-
-    }
-
-    /*
-     * Traverses the parent node and returns all words from that node,
-     * does it in a pre-order fashion
-     */
-    private List<String> getWordsFromTree() {
-        //List<String> childrenLetters = genericTree.getChildrenLetters(parent);
-        List<String> words = new LinkedList<>();
-
-        return words;
+        // at the end of the word, change isEnd to true to signify the end of the word
+        node.isEnd = true;
     }
 
     /*
@@ -188,22 +131,72 @@ public class WordTree {
         return word;
     }
 
+    protected List getWords(Tree.Node root) {
+        List words = new ArrayList();
+        String word = root.letter;
+
+        for (int i = 0; i < root.child.size(); i++) {
+            getWords(root.child.get(i));
+            word += root.child.get(i).letter;
+            if (root.isEnd) {
+                words.add(word);
+            }
+        }
+
+        return words;
+    }
+
     /*
      * Returns the top 10 autofill results by traversing the tree
      * with what already exists from user input (word)
      */
-    private List<String> getAutofillResults(String word) {
-        List<String> autofillResults = new LinkedList<>();
-
-        return autofillResults;
+    private List getAutofillResults(String prefix) {
+        Tree.Node lastNode = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            String letter = prefix.substring(i, i+1);
+            lastNode = genericTree.getSpecifiedChild(lastNode,letter);
+            if (lastNode == null) {
+                break;
+            }
+        }
+        return getWords(lastNode);
     }
 
-    private void hithere() {
+    private void printPreOrder(Tree.Node parent) {
+        if (parent == null)
+            return ;
+
+        System.out.println(parent.letter);
+
+        for (int i = 0; i < parent.child.size(); i++) {
+            printPreOrder(parent.child.get(i));
+        }
+    }
+
+    private void hellothere() {
+        /*
+        List<String> words = new LinkedList<>();
+        words = getWords(root);
+
+        for (int i = 0; i < words.size(); i++) {
+            System.out.println(words.get(i));
+        }
+
+        List<String> autofill = new LinkedList<>();
+        autofill = getAutofillResults("he");
+        for (int i = 0; i < autofill.size(); i++) {
+            System.out.println(autofill.get(i));
+        }
+
+         */
         printPreOrder(root);
-        System.out.println("space");
-        printInOrder(root);
-        System.out.println("space");
-        //printPostOrder(root);
+
+        System.out.println(genericTree.searchTree("Goodbye", root));
+
+        List words = getWords(root);
+        for (int i = 0; i < words.size(); i++) {
+            System.out.println("letter: " + words.get(i));
+        }
     }
 
     /*
@@ -213,11 +206,8 @@ public class WordTree {
         WordTree runner = new WordTree();
         runner.createTree();
         runner.readWordsFromFile();
-        //runner.fillInTree("hi");
-        //runner.fillInTree("hihihihi");
-        //runner.fillInTree("Hellos");
-        //runner.fillInTree("watup");
-        runner.hithere();
+        runner.hellothere();
+
     }
 }
 

@@ -7,7 +7,6 @@
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Vector;
 
 public class Tree {
@@ -44,7 +43,7 @@ public class Tree {
     /*
      * Takes the parent node, and returns the position of the specified child node
      */
-    public int getNumberofChildren(Node node) {
+    public int getNumberChildren(Node node) {
         return node.child.size();
     }
 
@@ -58,11 +57,9 @@ public class Tree {
     /*
      * Takes the parent node, and returns child node at specified position
      */
-    public Node getSpecifiedChild(Node parent, String chara) {
+    public Node getSpecifiedChild(Node parent, int pos) {
         if (parent == null)
             return null;
-
-        int pos = getPositionOfSpecifiedChild(parent, chara);
 
         int size = parent.child.size();
         if (pos > size - 1)
@@ -72,42 +69,19 @@ public class Tree {
     }
 
     /*
-     * Traverses the tree and returns the last node from the word inputted
+     * Takes the parent node, and returns child node with specified letter
      */
-    public Node getSpecifiedChildFromWord(Node root, String word) {
-        Node node = root;
-        List<String> nodeChildren = getChildrenLetters(node);
-        for (int i = 0; i < word.length(); i++) {
-            String letter = word.substring(i, i+1);
-            if (nodeChildren.contains(letter)) {
-                int pos = getPositionOfSpecifiedChild(node, letter);
-                node = node.child.get(pos);
-                nodeChildren = getChildrenLetters(node);
-            } else {
-                node = null;
-                break;
-            }
-        }
-
-        return node;
-    }
-
-    /*
-     * returns a list of all the children of a node,
-     * in the format of the nodes
-     */
-    public List<Node> getChildrenNodes(Node parent) {
-        List<Node> children = new LinkedList<>();
-
+    public Node getSpecifiedChild(Node parent, String letter) {
         if (parent == null)
-            children = null;
+            return null;
+
+        int pos = getPositionOfSpecifiedChild(parent, letter);
 
         int size = parent.child.size();
-        for (int i = 0; i < size; i++) {
-            children.add(parent.child.get(i));
-        }
+        if (pos > size - 1)
+            return null;
 
-        return children;
+        return parent.child.get(pos);
     }
 
     /*
@@ -128,27 +102,32 @@ public class Tree {
         return children;
     }
 
-    public void LevelOrderTraversal(Node root) {
-        if (root == null)
-            return;
+    /*
+     * searches the tree from provided root to see if word exists
+     */
+    public boolean searchTree(String word, Node root) {
+        // starts off with root node and gets all of it's children in a list to check against
+        List<String> nodeLetters = getChildrenLetters(root);
+        Tree.Node node = root;
 
-        Queue<Node> q = new LinkedList<>();
-        q.add(root);
-        while (!q.isEmpty())
-        {
-            int n = q.size();
+        // goes through each letter of the word, and checks if it exists as as the node's child
+        for (int i = 0; i < word.length(); i++) {
+            String letter = word.substring(i, i + 1).toLowerCase();
 
-            while (n > 0) {
-                Node p = q.peek();
-                q.remove();
-                System.out.println(p.letter + " ");
-
-                for (int i = 0; i < p.child.size(); i++) {
-                    q.add(p.child.get(i));
-                }
-                n--;
+            // if it doesn't exist, then it will add the letter as a child to the node
+            if (!getChildrenLetters(node).contains(letter)) {
+                return false;
+            } else {
+                // reassigns the nodeLetters and node to the next node, which is the child to previous
+                nodeLetters = getChildrenLetters(node);
+                node = getSpecifiedChild(node, letter);
             }
-            System.out.println();
+        }
+
+        if (node.isEnd) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
