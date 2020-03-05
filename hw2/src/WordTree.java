@@ -78,11 +78,41 @@ public class WordTree {
     }
 
     /*
-     * Prints out the prompt to the user in the console
+     * Get all words associated with node, uses a pre-order traversal
+     * Takes in a word that should be initialized as "" to use for recursion
      */
-    private static void commandLinePrompt() {
-        System.out.println("Enter a word, one character at a time.");
-        System.out.println("At the end of each character, hit enter. If done filling out word, enter '*'.");
+    private List getWords(Tree.Node node, String word) {
+        List words = new ArrayList();
+        word += node.letter;
+
+        if (node.isEnd)
+            words.add(word);
+
+        if (!node.child.isEmpty()) {
+            for (int i = 0; i < node.child.size(); i++) {
+                words.addAll(getWords(node.child.get(i), word));
+            }
+        }
+
+        return words;
+    }
+
+    /*
+     * Returns a list of the the autofill results from a prefix
+     */
+    private List getAutoFillResults(String prefix) {
+        Tree.Node node = root;
+
+        for (int i = 0; i < prefix.length(); i++) {
+            String letter = prefix.substring(i, i+1);
+            int pos = genericTree.getPositionOfSpecifiedChild(node, letter);
+            node = node.child.get(pos);
+            if (node == null) {
+                return new ArrayList();
+            }
+        }
+        String word = "";
+        return getWords(node, word);
     }
 
     /*
@@ -104,52 +134,24 @@ public class WordTree {
     }
 
     /*
-     * Get all words associated with node, uses a pre-order traversal
-     * Takes in a word that should be initialized as "" to use for recursion
+     * Prints out instructions to console for user and gets the word input,
+     * then prints out up to 10 results for autofill
      */
-    private List getWords(Tree.Node node, String word) {
-        List words = new ArrayList();
-        word += node.letter;
+    private void commandLinePrompt() {
+        System.out.println("Enter a word, one character at a time.");
+        System.out.println("At the end of each character, hit enter. If done filling out word, enter '*'.");
 
-        if (node.isEnd)
-            words.add(word);
-
-        for (int i = 0; i < node.child.size(); i++) {
-            words.addAll(getWords(node.child.get(i), word));
-            //printPreOrder(node.child.get(i));
+        String prefix = "";
+        String character = getCharaFromConsole();
+        while (character!= null && !character.equals("*")) {
+            prefix += character;
+            character = getCharaFromConsole();
         }
+        System.out.println("word entered: " + prefix);
 
-        return words;
-    }
-
-    /*
-     * Returns a list of the the autofill results from a prefix
-     */
-    private List getAutoFillResults(String prefix) {
-        Tree.Node node = root;
-        for (int i = 0; i < prefix.length(); i++) {
-            String letter = prefix.substring(i, i+1);
-            int pos = genericTree.getPositionOfSpecifiedChild(node, letter);
-            node = node.child.get(pos);
-            if (node == null) {
-                return new ArrayList();
-            }
-        }
-        String word = "";
-        return getWords(node, word);
-    }
-
-    private void hellothere() {
-        System.out.println(genericTree.searchTree("Goodbye", root));
-        String word = "";
-        List words = getWords(root.child.firstElement(), word);
-        for (int i = 0; i < words.size(); i++) {
-            System.out.println("letter: " + words.get(i));
-        }
-
-        List autocorrect = getAutoFillResults("aha");
-        for (int i = 0; i < autocorrect.size(); i++) {
-            System.out.println("autocorrect: " + autocorrect.get(i));
+        List autofill = getAutoFillResults(prefix).subList(0, 10);
+        for (int i = 0; i < autofill.size(); i++) {
+            System.out.println("autofill: " + prefix.substring(0, prefix.length()-1) + autofill.get(i));
         }
     }
 
@@ -160,8 +162,7 @@ public class WordTree {
         WordTree runner = new WordTree();
         runner.createTree();
         runner.readWordsFromFile();
-        runner.hellothere();
-
+        runner.commandLinePrompt();
     }
 }
 
