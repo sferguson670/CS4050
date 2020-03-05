@@ -14,7 +14,7 @@ public class Tree {
     /*
      * Represents a node of a tree
      */
-    class Node {
+    static class Node {
         String letter;
         Vector<Node> child = new Vector<>();
         Boolean isEnd = false;
@@ -94,6 +94,7 @@ public class Tree {
         if (node == null)
             children = null;
 
+        assert node != null;
         int size = node.child.size();
         for (int i = 0; i < size; i++) {
             children.add(node.child.get(i).letter);
@@ -124,11 +125,7 @@ public class Tree {
             }
         }
 
-        if (node.isEnd) {
-            return true;
-        } else {
-            return false;
-        }
+        return node.isEnd;
     }
 }
 

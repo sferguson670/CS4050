@@ -17,15 +17,14 @@ public class WordTree {
 
     private Tree genericTree;
     private Tree.Node root;
-    private String FILENAME = "words.txt";
 
     /*
      * Initializes the tree, creates only parent node
      * and returns that parent node
      */
-    private Tree.Node createTree() {
+    private void createTree() {
         genericTree = new Tree();
-        return root = genericTree.createRootNode();
+        root = genericTree.createRootNode();
     }
 
     /*
@@ -34,6 +33,7 @@ public class WordTree {
      * does this until it hits end of file.
      */
     private void readWordsFromFile() throws IOException {
+        String FILENAME = "words2.txt";
         File file = new File(FILENAME);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
@@ -124,7 +124,7 @@ public class WordTree {
         Character c = sc.next().charAt(0);
 
         // checks if user inputs '*' to signal end of word or non-alphabetical value
-        if (c.charValue() == 42) {
+        if (c == 42) {
             return "*";
         } else if (!Character.isAlphabetic(c)) {
             System.out.println("Character entered is not a letter, try again.");
@@ -141,17 +141,20 @@ public class WordTree {
         System.out.println("Enter a word, one character at a time.");
         System.out.println("At the end of each character, hit enter. If done filling out word, enter '*'.");
 
-        String prefix = "";
+        StringBuilder prefix = new StringBuilder();
         String character = getCharaFromConsole();
         while (character!= null && !character.equals("*")) {
-            prefix += character;
+            prefix.append(character);
             character = getCharaFromConsole();
         }
         System.out.println("word entered: " + prefix);
 
-        List autofill = getAutoFillResults(prefix).subList(0, 10);
-        for (int i = 0; i < autofill.size(); i++) {
-            System.out.println("autofill: " + prefix.substring(0, prefix.length()-1) + autofill.get(i));
+        List autofill = getAutoFillResults(prefix.toString());
+        if (autofill.size() > 10) {
+            autofill = autofill.subList(0, 10);
+        }
+        for (Object o : autofill) {
+            System.out.println("autofill: " + prefix.substring(0, prefix.length() - 1) + o);
         }
     }
 
