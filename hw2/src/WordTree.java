@@ -47,8 +47,7 @@ public class WordTree {
     /*
      * Each word is broken into each character (all lowercase),
      * each character is a child node to the previous letter
-     * to signal the end of the word, the last node will be *
-     * ex) Root -> H -> E -> L -> L -> O -> *
+     * ex) Root -> H -> E -> L -> L -> O
      */
     private void fillInTree(String word) {
         // if word already exists, then do nothing
@@ -105,97 +104,52 @@ public class WordTree {
     }
 
     /*
-     * Returns a string to represent what the user is inputted,
-     * concat each character entered into one word
+     * Get all words associated with node, uses a pre-order traversal
+     * Takes in a word that should be initialized as "" to use for recursion
      */
-    private static String getWordFromConsole() {
-        commandLinePrompt();
-
-        Boolean repeat = true;
-        String getCharaFromConsole = getCharaFromConsole();
-        String word = "";
-
-        while (repeat = true) {
-            if (getCharaFromConsole.equals("*")) {
-                word += "*";
-                break;
-            } else if (getCharaFromConsole.equals(null)) {
-                word = null;
-                break;
-            } else {
-                word += getCharaFromConsole;
-            }
-            getCharaFromConsole();
-        }
-        System.out.println(word);
-        return word;
-    }
-
-    protected List getWords(Tree.Node root) {
+    private List getWords(Tree.Node node, String word) {
         List words = new ArrayList();
-        String word = root.letter;
+        word += node.letter;
 
-        for (int i = 0; i < root.child.size(); i++) {
-            getWords(root.child.get(i));
-            word += root.child.get(i).letter;
-            if (root.isEnd) {
-                words.add(word);
-            }
+        if (node.isEnd)
+            words.add(word);
+
+        for (int i = 0; i < node.child.size(); i++) {
+            words.addAll(getWords(node.child.get(i), word));
+            //printPreOrder(node.child.get(i));
         }
 
         return words;
     }
 
     /*
-     * Returns the top 10 autofill results by traversing the tree
-     * with what already exists from user input (word)
+     * Returns a list of the the autofill results from a prefix
      */
-    private List getAutofillResults(String prefix) {
-        Tree.Node lastNode = root;
+    private List getAutoFillResults(String prefix) {
+        Tree.Node node = root;
         for (int i = 0; i < prefix.length(); i++) {
             String letter = prefix.substring(i, i+1);
-            lastNode = genericTree.getSpecifiedChild(lastNode,letter);
-            if (lastNode == null) {
-                break;
+            int pos = genericTree.getPositionOfSpecifiedChild(node, letter);
+            node = node.child.get(pos);
+            if (node == null) {
+                return new ArrayList();
             }
         }
-        return getWords(lastNode);
-    }
-
-    private void printPreOrder(Tree.Node parent) {
-        if (parent == null)
-            return ;
-
-        System.out.println(parent.letter);
-
-        for (int i = 0; i < parent.child.size(); i++) {
-            printPreOrder(parent.child.get(i));
-        }
+        String word = "";
+        return getWords(node, word);
     }
 
     private void hellothere() {
-        /*
-        List<String> words = new LinkedList<>();
-        words = getWords(root);
-
-        for (int i = 0; i < words.size(); i++) {
-            System.out.println(words.get(i));
-        }
-
-        List<String> autofill = new LinkedList<>();
-        autofill = getAutofillResults("he");
-        for (int i = 0; i < autofill.size(); i++) {
-            System.out.println(autofill.get(i));
-        }
-
-         */
-        printPreOrder(root);
-
         System.out.println(genericTree.searchTree("Goodbye", root));
-
-        List words = getWords(root);
+        String word = "";
+        List words = getWords(root.child.firstElement(), word);
         for (int i = 0; i < words.size(); i++) {
             System.out.println("letter: " + words.get(i));
+        }
+
+        List autocorrect = getAutoFillResults("aha");
+        for (int i = 0; i < autocorrect.size(); i++) {
+            System.out.println("autocorrect: " + autocorrect.get(i));
         }
     }
 
