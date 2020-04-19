@@ -14,8 +14,6 @@ import java.util.Random;
 
 public class ArraySearch {
     private ArrayList<Integer> array = new ArrayList<>();
-    private int arraySize = 1000;
-    private int numOfGuesses = 5000;
     private int comparisons = 0;
 
     /*
@@ -23,6 +21,7 @@ public class ArraySearch {
      * This ensures every entry in the array to be unique
      */
     private void generateArrayValues() {
+        int arraySize = 1000;
         for (int i = 0; i < arraySize; i++) {
             array.add(i);
         }
@@ -43,18 +42,16 @@ public class ArraySearch {
      * Generates an index at random and tests to see if known value from array
      * is at the random position, will do until found or until number of guesses
      */
-    private boolean checkArrayForRandomValue(int numInArray) {
-        boolean found = false;
+    private void checkArrayForRandomValue(int numInArray) {
         Random num = new Random();
+        int numOfGuesses = 5000;
         for (int i = 0; i < numOfGuesses; i++) {
             comparisons++;
             int pos = num.nextInt(1000);
             if (array.get(pos) == numInArray) {
-                found = true;
                 break;
             }
         }
-        return found;
     }
 
     public static void main(String[] args) {
