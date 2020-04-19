@@ -50,11 +50,7 @@ public class Pi {
     private boolean isDartInCircle(double x, double y) {
         double value = Math.pow((x - 1), 2) + Math.pow((y - 1), 2);
 
-        if (value <= 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return value <= 1;
     }
 
     /*
