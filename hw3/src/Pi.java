@@ -12,20 +12,26 @@
 import java.util.Random;
 
 public class Pi {
-    private static int num_of_darts = 1000;
-    private Boolean[] dartsInCircle = new Boolean[num_of_darts];
+    private static int num_of_darts = 100000000;
+    private int count = 0;
 
     /*
      * Throws a specified number of darts,
      * console will print out the (X,Y) coordinates,
-     * will check if the dart lands in a circle, puts this result in an array
+     * will check if the dart lands in a circle, add to count if so
      */
     private void throwDarts() {
         for (int i = 0; i < num_of_darts; i++) {
-            Coordinate coordinates = new Coordinate();
-            System.out.println("X: " + coordinates.getX() + ", Y: " + coordinates.getY());
-            dartsInCircle[i] = isDartInCircle(coordinates);
-            System.out.println("Dart in circle? " + dartsInCircle[i]);
+            Random num = new Random();
+            double x = num.nextDouble() * 2;
+            double y = num.nextDouble() * 2;
+            System.out.println("X: " + x + ", Y: " + y);
+
+            boolean inCircle = isDartInCircle(x, y);
+            if (inCircle) {
+                count++;
+            }
+            System.out.println("Dart in circle? " + inCircle);
         }
     }
 
@@ -41,10 +47,7 @@ public class Pi {
      * if calculated value is less than or equal to the radius of the circle,
      * return true, meaning the dart is inside the circle
      */
-    private boolean isDartInCircle(Coordinate coordinates) {
-        double x = coordinates.getX();
-        double y = coordinates.getY();
-
+    private boolean isDartInCircle(double x, double y) {
         double value = Math.pow((x - 1), 2) + Math.pow((y - 1), 2);
 
         if (value <= 1) {
@@ -61,13 +64,6 @@ public class Pi {
     private void printOutResults() {
         System.out.println("***********************************************");
         System.out.println("Total number of darts thrown: " + num_of_darts);
-
-        int count = 0;
-        for (int i = 0; i < dartsInCircle.length; i++) {
-            if (dartsInCircle[i]) {
-                count++;
-            }
-        }
         System.out.println("Total number of darts made into circle: " + count);
     }
 
@@ -75,49 +71,5 @@ public class Pi {
         Pi runner = new Pi();
         runner.throwDarts();
         runner.printOutResults();
-    }
-
-    /*
-     * Class to represent an coordinate object,
-     * each object has its own X and Y values,
-     * will represent the coordinates from when a dart is thrown
-     */
-    class Coordinate {
-        private double x;
-        private double y;
-
-        public Coordinate() {
-            setX();
-            setY();
-        }
-
-        /*
-         * Sets the X value as a random double between 0 to 2
-         */
-        public void setX() {
-            Random num = new Random();
-            x = num.nextDouble() * 2;
-        }
-
-        /*
-         * Sets the Y value as a random double between 0 to 2
-         */
-        public void setY() {
-            Random num = new Random();
-            y = num.nextDouble() * 2;
-        }
-        /*
-         * Returns the X coordinate value
-         */
-        public double getX() {
-            return this.x;
-        }
-
-        /*
-         * Returns the Y coordinate value
-         */
-        public double getY() {
-            return this.y;
-        }
     }
 }
