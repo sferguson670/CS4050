@@ -28,9 +28,8 @@ public class Pi {
             System.out.println("X: " + x + ", Y: " + y);
 
             boolean inCircle = isDartInCircle(x, y);
-            if (inCircle) {
+            if (inCircle)
                 count++;
-            }
             System.out.println("Dart in circle? " + inCircle);
         }
     }
@@ -49,23 +48,20 @@ public class Pi {
      */
     private boolean isDartInCircle(double x, double y) {
         double value = Math.pow((x - 1), 2) + Math.pow((y - 1), 2);
-
         return value <= 1;
-    }
-
-    /*
-     * Prints out the total number of darts thrown and the total that made it into the circle
-     * by checking how many entries in the array are true
-     */
-    private void printOutResults() {
-        System.out.println("***********************************************");
-        System.out.println("Total number of darts thrown: " + num_of_darts);
-        System.out.println("Total number of darts made into circle: " + count);
     }
 
     public static void main(String[] args) {
         Pi runner = new Pi();
         runner.throwDarts();
-        runner.printOutResults();
+
+        System.out.println("***********************************************");
+        System.out.println("Total number of darts thrown: " + num_of_darts);
+        System.out.println("Total number of darts made into circle: " + runner.count);
     }
 }
+
+/*
+ * References used:
+ * https://www.mathwarehouse.com/geometry/circle/equation-of-a-circle.php
+ */

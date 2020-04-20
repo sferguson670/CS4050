@@ -48,9 +48,8 @@ public class ArraySearch {
         for (int i = 0; i < numOfGuesses; i++) {
             comparisons++;
             int pos = num.nextInt(1000);
-            if (array.get(pos) == numInArray) {
+            if (array.get(pos) == numInArray)
                 break;
-            }
         }
     }
 
@@ -65,3 +64,8 @@ public class ArraySearch {
         System.out.println("Total number of comparisons: " + runner.comparisons);
     }
 }
+
+/*
+ * References used:
+ * http://www.instanceofjava.com/2016/08/random-number-generator-java-range.html
+ */
