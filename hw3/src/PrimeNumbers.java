@@ -24,6 +24,68 @@ public class PrimeNumbers {
     }
 
     /*
+     * Returns a random even number
+     * from 1,000,000 to 5,000,000
+     */
+    private int getRandomEvenNumber() {
+        Random num = new Random();
+        int randomNum;
+        do {
+            randomNum = num.nextInt(((5000000 - 1000000) + 1) + 1000000);
+        }
+        while ( randomNum % 2 != 0);
+        return randomNum;
+    }
+
+    /*
+     * Returns a random number where final digit is 5
+     * from 1,000,000 to 5,000,000
+     */
+    private int getRandomFinalDigit5Number() {
+        Random num = new Random();
+        int randomNum;
+        do {
+            randomNum = num.nextInt(((5000000 - 1000000) + 1) + 1000000);
+        }
+        while ( randomNum % 10 != 5);
+        return randomNum;
+    }
+
+    /*
+     * Returns a random number where sum of all digits is divisible by 3
+     * from 1,000,000 to 5,000,000
+     */
+    private int getRandomAllDigitsDivisibleBy3Number() {
+        Random num = new Random();
+        int randomNum;
+        do {
+            randomNum = num.nextInt(((5000000 - 1000000) + 1) + 1000000);
+        }
+        while ( getSumDigits(randomNum) % 3 != 0);
+        return randomNum;
+    }
+
+    private int getSumDigits(int num) {
+        int sum = 0;
+        while (num > 0) {
+            sum = sum + num % 10;
+            num = num / 10;
+        }
+        return sum;
+    }
+
+    /*
+     * Returns a random number where it is a product of 2 positive ints
+     * where each positive int is between 1 to 5000
+     */
+    private int getRandomProductOf2PositiveIntsNumber() {
+        Random num = new Random();
+        int randomNum = num.nextInt(5000 + 1);
+        int randomNum2 = num.nextInt(5000 + 1);
+        return randomNum * randomNum2;
+    }
+
+    /*
      * Generate a random number n where 1 < n < P, k number of times,
      * each time do check if % will return it as a Prime number,
      * for each time it is REJECTED (NOT a prime number), add to counter
@@ -63,8 +125,9 @@ public class PrimeNumbers {
 /*
  * References used:
  * https://www.tutorialspoint.com/read-integers-from-console-in-java
- * https://en.wikipedia.org/wiki/Prime_number
  * https://www.mathsisfun.com/prime_numbers.html
  * https://primes.utm.edu/curios/includes/primetest.php
  * https://mkyong.com/java/java-generate-random-integers-in-a-range/
+ * https://stackoverflow.com/questions/17144997/gets-last-digit-of-a-number
+ * https://stackoverflow.com/questions/27096670/how-to-sum-digits-of-an-integer-in-java
  */
