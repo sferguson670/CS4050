@@ -11,7 +11,7 @@ import java.util.Random;
 public class EightQueens {
     int[][] chessboard = new int[8][8];
     int k_queens = 1;
-    int backtrack_queens = 8 - k_queens;
+    int bt_queens = 8 - k_queens;
 
     /*
      * Returns a randomized int between 0 - 8
@@ -23,16 +23,42 @@ public class EightQueens {
 
     /*
      * Finds a random spot in the board, glues a queen here
-     * by marking this spot in 2d array as a 1
+     * by marking this spot in 2d array as a 1,
+     * checks if it is in a valid spot first
      */
     private void glueRandomQueens(int k) {
+        int x;
+        int y;
         for (int i = 0; i < k; i++) {
-            int x = getRandomNum();
-            int y = getRandomNum();
+            do {
+                x = getRandomNum();
+                y = getRandomNum();
+            } while (!validateQueen(x, y));
             chessboard[y][x] = 1;
             printOutBoard();
             System.out.println(validateQueen(x, y));
         }
+    }
+
+    /*
+     * Recursively checks and backtracks to find where to place the
+     * back track queens
+     */
+    private boolean checkBackTrackQueens(int queens, int column) {
+        if (column >= queens)
+            return true;
+
+        for (int i = 0; i < queens; i++) {
+            if (validateQueen(i, column)) {
+                chessboard[i][column] = 1;
+
+                if (checkBackTrackQueens(queens, column + 1))
+                    return true;
+
+                chessboard[i][column] = 0;
+            }
+        }
+        return false;
     }
 
     /*
@@ -41,9 +67,17 @@ public class EightQueens {
      * return false if in invalid space
      */
     private boolean validateQueen(int x, int y) {
-        return !( checkRow(x,y) || checkColumn(x,y) || checkUpLeftDiagonal(x,y)
-        || checkDownRightDiagonal(x,y) || checkDownLeftDiagonal(x,y)
-        || checkUpRightDiagonal(x,y) );
+        return !( checkRow(x,y) || checkColumn(x,y)
+                || checkUpLeftDiagonal(x,y) || checkDownRightDiagonal(x,y)
+                || checkDownLeftDiagonal(x,y) || checkUpRightDiagonal(x,y) );
+    }
+
+    /*
+     * Checks if another queen exists in the same spot,
+     * returns true if invalid queen space
+     */
+    private boolean checkSameSpot(int x, int y) {
+        return chessboard[y][x] == 1;
     }
 
     /*
@@ -51,18 +85,14 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkRow(int x, int y) {
-        boolean repeat = false;
         for (int i = 0; i < 8; i++) {
-            if (i == x) {
-
-            } else {
+            if (i != x) {
                 if (chessboard[y][i] == 1) {
-                    repeat = true;
-                    break;
+                    return true;
                 }
             }
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -70,18 +100,14 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkColumn(int x, int y) {
-        boolean repeat = false;
         for (int i = 0; i < 8; i++) {
-            if (i == y) {
-
-            } else {
+            if (i != y) {
                 if (chessboard[i][x] == 1) {
-                    repeat = true;
-                    break;
+                    return true;
                 }
             }
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -89,18 +115,16 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkUpLeftDiagonal(int x, int y) {
-        boolean repeat = false;
         int column = x - 1;
         int row = y - 1;
         while (column >= 0 && row >=0) {
             if (chessboard[row][column] == 1) {
-                repeat = true;
-                break;
+                return true;
             }
             column -= 1;
             row -= 1;
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -108,18 +132,16 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkDownRightDiagonal(int x, int y) {
-        boolean repeat = false;
         int column = x + 1;
         int row = y + 1;
         while (column < 8 && row < 8) {
             if (chessboard[row][column] == 1) {
-                repeat = true;
-                break;
+                return true;
             }
             column += 1;
             row += 1;
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -127,18 +149,16 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkDownLeftDiagonal(int x, int y) {
-        boolean repeat = false;
         int column = x - 1;
         int row = y + 1;
         while (column >= 0 && row < 8) {
             if (chessboard[row][column] == 1) {
-                repeat = true;
-                break;
+                return true;
             }
             column -= 1;
             row += 1;
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -146,18 +166,16 @@ public class EightQueens {
      * returns true if invalid queen space
      */
     private boolean checkUpRightDiagonal(int x, int y) {
-        boolean repeat = false;
         int column = x + 1;
         int row = y + 1;
         while (column < 8 && row < 8) {
             if (chessboard[row][column] == 1) {
-                repeat = true;
-                break;
+                return true;
             }
             column += 1;
             row += 1;
         }
-        return repeat;
+        return false;
     }
 
     /*
@@ -174,7 +192,9 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        runner.glueRandomQueens(3);
+        runner.checkBackTrackQueens(8, 0);
+        System.out.println("***********");
+        runner.printOutBoard();
     }
 }
 
@@ -182,4 +202,6 @@ public class EightQueens {
  * References used:
  * https://en.wikipedia.org/wiki/Queen_(chess)
  * https://www.programiz.com/java-programming/multidimensional-array
+ * https://iq.opengenus.org/8-queens-problem-backtracking/
+ * https://www.geeksforgeeks.org/java-program-for-n-queen-problem-backtracking-3/
  */
