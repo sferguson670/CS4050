@@ -35,6 +35,10 @@ public class EightQueens {
             } while (!validateQueen(row, column));
             chessboard[row][column] = 1;
         }
+        // after filling up the board, check if solvable, reset if so
+        for (int column = k; column >= 0; column--) {
+            checkBackTrackQueens(8, column);
+        }
     }
 
     /*
@@ -50,18 +54,18 @@ public class EightQueens {
 
     /*
      * Recursively checks and backtracks to find where to place the
-     * back track queens, begins from specified row and checks each column
+     * back track queens, begins from specified column and checks each row
      */
-    private boolean checkBackTrackQueens(int numOfQueens, int row) {
-        if (row == numOfQueens) {
+    private boolean checkBackTrackQueens(int numOfQueens, int column) {
+        if (column == numOfQueens) {
             printOutBoard();
         } else {
-            for (int c = 0; c < numOfQueens; c++) {
-                chessboard[row][c] = 1;
-                if (validateQueen(row, c)) {
-                    checkBackTrackQueens(numOfQueens, row + 1);
+            for (int r = 0; r < numOfQueens; r++) {
+                chessboard[r][column] = 1;
+                if (validateQueen(r, column)) {
+                    checkBackTrackQueens(numOfQueens, column + 1);
                 }
-                chessboard[row][c] = 0;
+                chessboard[r][column] = 0;
             }
         }
         return false;
@@ -199,9 +203,9 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-
-        runner.glueRandomQueens(7);
-        runner.printOutBoard();
+        //runner.checkBackTrackQueens(8, 5);
+        //runner.glueRandomQueens(7);
+        //runner.printOutBoard();
     }
 }
 
