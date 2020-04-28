@@ -53,12 +53,22 @@ public class EightQueens {
      * return FALSE if in INVALID space
      */
     private boolean validateQueen(int r, int c) {
-        return ( checkRow(r,c) && checkColumn(r,c) && checkUpLeftDiagonal(r,c) && checkDownRightDiagonal(r,c)
+        return ( checkSameSpot(r,c) && checkRow(r,c) && checkColumn(r,c)
+                && checkUpLeftDiagonal(r,c) && checkDownRightDiagonal(r,c)
                 && checkDownLeftDiagonal(r,c) && checkUpRightDiagonal(r,c) );
     }
 
     /*
-     * Looks at the same row as just placed queen piece,
+     * Looks at the same spot as queen piece,
+     * has to be empty, no duplicates
+     * returns TRUE if VALID queen space
+     */
+    private boolean checkSameSpot(int row, int column) {
+        return chessboard[row][column] != 1;
+    }
+
+    /*
+     * Looks at the same row as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkRow(int row, int column) {
@@ -73,7 +83,7 @@ public class EightQueens {
     }
 
     /*
-     * Looks at the same column as just placed queen piece,
+     * Looks at the same column as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkColumn(int row, int column) {
@@ -88,7 +98,7 @@ public class EightQueens {
     }
 
     /*
-     * Looks at the same diagonal (up left) as just placed queen piece,
+     * Looks at the same diagonal (up left) as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkUpLeftDiagonal(int row, int column) {
@@ -105,7 +115,7 @@ public class EightQueens {
     }
 
     /*
-     * Looks at the same diagonal (down right) as just placed queen piece,
+     * Looks at the same diagonal (down right) as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkDownRightDiagonal(int row, int column) {
@@ -122,7 +132,7 @@ public class EightQueens {
     }
 
     /*
-     * Looks at the same diagonal (down left) as just placed queen piece,
+     * Looks at the same diagonal (down left) as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkDownLeftDiagonal(int row, int column) {
@@ -139,7 +149,7 @@ public class EightQueens {
     }
 
     /*
-     * Looks at the same diagonal (up right) as just placed queen piece,
+     * Looks at the same diagonal (up right) as queen piece,
      * returns TRUE if VALID queen space
      */
     private boolean checkUpRightDiagonal(int row, int column) {
