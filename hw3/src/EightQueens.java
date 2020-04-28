@@ -9,9 +9,10 @@
 import java.util.Random;
 
 public class EightQueens {
-    int[][] chessboard = new int[8][8];
-    int k_queens = 1;
-    int bt_queens = 8 - k_queens;
+    private int[][] chessboard = new int[8][8];
+
+    private static int k_queens = 7;
+    private static int bt_queens = 8 - k_queens;
 
     /*
      * Returns a randomized int between 0 - 8
@@ -28,48 +29,23 @@ public class EightQueens {
      */
     private void glueRandomQueens(int k) {
         int row;
-        int column = 0;
-        for (int i = 0; i < k; i++) {
+        for (int column = 0; column < k; column++) {
             do {
                 row = getRandomNum();
-                column = i;
             } while (!validateQueen(row, column));
             chessboard[row][column] = 1;
         }
     }
 
     /*
-     * After randomly generating all queens,
-     * if board leads to impossible state,
-     * board is erased and places random queens again
+     * Clears the board
      */
-    private void checkRandomlyPlacedQueens(int k) {
-        // k represents last column
-        if ( k <= 8 && !isBoardPossible(k)) {
-            // clears the board
-            for (int r = 0; r < 8; r++) {
-                for (int c = 0; c < 8; c++) {
-                    chessboard[r][c] = 0;
-                }
-            }
-            glueRandomQueens(k);
-        }
-    }
-
-    /*
-     * When randomly placed queens are finished,
-     * check if the board is in a possible state,
-     * goes through column we are on,
-     * and checks if any of its rows are safe to place another queen
-     * returns FALSE is board is in impossible state
-     */
-    private boolean isBoardPossible(int column) {
+    private void clearBoard() {
         for (int r = 0; r < 8; r++) {
-            if (!validateQueen(r, column)) {
-                return false;
+            for (int c = 0; c < 8; c++) {
+                chessboard[r][c] = 0;
             }
         }
-        return true;
     }
 
     /*
@@ -78,7 +54,7 @@ public class EightQueens {
      */
     private boolean checkBackTrackQueens(int numOfQueens, int row) {
         if (row == numOfQueens) {
-            return true;
+            printOutBoard();
         } else {
             for (int c = 0; c < numOfQueens; c++) {
                 chessboard[row][c] = 1;
@@ -223,9 +199,9 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        runner.glueRandomQueens(5);
+
+        runner.glueRandomQueens(7);
         runner.printOutBoard();
-        //runner.checkBackTrackQueens(8, 0);
     }
 }
 
