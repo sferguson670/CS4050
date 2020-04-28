@@ -15,11 +15,18 @@ public class EightQueens {
     private static int total_queens = 8;
 
     /*
-     * Returns a randomized int between 0 - 8
+     * Runner for placing random queens,
+     * places K amount of random queens,
+     * if board leads to unsolvable solution,
+     * all queens are removed and tried again
+     * this is done until solvable board is found
      */
-    private int getRandomNum() {
-        Random num = new Random();
-        return num.nextInt(8);
+    private void doRandomQueens() {
+        glueRandomQueens(k_queens);
+        while (!checkBackTrackQueens(k_queens)) {
+            clearChessBoard();
+            glueRandomQueens(k_queens);
+        }
     }
 
     /*
@@ -35,25 +42,52 @@ public class EightQueens {
             } while (!validateQueen(row, column));
             chessboard[row][column] = 1;
         }
+        System.out.println("****************** initial board");
+        printOutBoard();
+    }
+
+    /*
+     * Returns a randomized int between 0 - 8
+     */
+    private int getRandomNum() {
+        Random num = new Random();
+        return num.nextInt(8);
+    }
+
+    /*
+     * Resets the chessboard,
+     * goes through each row and column and sets to 0
+     */
+    private void clearChessBoard() {
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                chessboard[r][c] = 0;
+            }
+        }
     }
 
     /*
      * Recursively checks and backtracks to find where to place the
      * back track queens, begins from specified column and checks each row
+     * returns TRUE if board has SOLUTION
+     * returns FALSE if board has NO solution
      */
-    private void checkBackTrackQueens(int column) {
+    private boolean checkBackTrackQueens(int column) {
         if (column == total_queens) {
+            System.out.println("****************** backtrack board");
             printOutBoard();
-            System.out.println("*************");
+            return true;
         } else {
             for (int r = 0; r < total_queens; r++) {
                 chessboard[r][column] = 1;
                 if (validateQueen(r, column)) {
-                    checkBackTrackQueens(column + 1);
+                    if (checkBackTrackQueens(column + 1))
+                        return true;
                 }
                 chessboard[r][column] = 0;
             }
         }
+        return false;
     }
 
     /*
@@ -181,10 +215,7 @@ public class EightQueens {
         EightQueens runner = new EightQueens();
 
         Long start = System.nanoTime();
-        runner.glueRandomQueens(k_queens);
-        runner.printOutBoard();
-        System.out.println("****************** backtrack below");
-        runner.checkBackTrackQueens(k_queens);
+        runner.doRandomQueens();
         Long stop = System.nanoTime();
 
         System.out.println("Time taken: " + (stop - start));
