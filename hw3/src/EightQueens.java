@@ -33,7 +33,7 @@ public class EightQueens {
             do {
                 row = getRandomNum();
                 column = getRandomNum();
-            } while (!validateQueen(row, column));
+            } while (!validateQueen(row, column) && !checkSameSpot(row, column));
             chessboard[row][column] = 1;
         }
     }
@@ -43,15 +43,14 @@ public class EightQueens {
      * back track queens, begins from first row and checks each column
      */
     private void checkBackTrackQueens(int numOfQueens, int row) {
-        if (row == numOfQueens)
-            printOutBoard();
-
-        for (int c = 0; c < numOfQueens; c++) {
-            if (validateQueen(row, c)) {
+        if (row == numOfQueens) {
+            // do nothing
+        } else {
+            for (int c = 0; c < numOfQueens; c++) {
                 chessboard[row][c] = 1;
-
-                checkBackTrackQueens(numOfQueens, row + 1);
-
+                if (validateQueen(row, c)) {
+                    checkBackTrackQueens(numOfQueens, row + 1);
+                }
                 chessboard[row][c] = 0;
             }
         }
@@ -63,7 +62,7 @@ public class EightQueens {
      * return FALSE if in INVALID space
      */
     private boolean validateQueen(int r, int c) {
-        return ( checkSameSpot(r,c) && checkRow(r,c) && checkColumn(r,c)
+        return ( checkRow(r,c) && checkColumn(r,c)
                 && checkUpLeftDiagonal(r,c) && checkDownRightDiagonal(r,c)
                 && checkDownLeftDiagonal(r,c) && checkUpRightDiagonal(r,c) );
     }
@@ -189,8 +188,9 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        //runner.glueRandomQueens(5);
-        runner.checkBackTrackQueens(8, 0);
+        runner.glueRandomQueens(5);
+        runner.printOutBoard();
+        //runner.checkBackTrackQueens(8, 0);
     }
 }
 
