@@ -42,9 +42,19 @@ public class EightQueens {
      * Recursively checks and backtracks to find where to place the
      * back track queens, begins from first row and checks each column
      */
-    private boolean checkBackTrackQueens(int queens, int row) {
+    private void checkBackTrackQueens(int numOfQueens, int row) {
+        if (row == numOfQueens)
+            printOutBoard();
 
-        return false;
+        for (int c = 0; c < numOfQueens; c++) {
+            if (validateQueen(row, c)) {
+                chessboard[row][c] = 1;
+
+                checkBackTrackQueens(numOfQueens, row + 1);
+
+                chessboard[row][c] = 0;
+            }
+        }
     }
 
     /*
@@ -179,8 +189,8 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        runner.glueRandomQueens(5);
-        runner.printOutBoard();
+        //runner.glueRandomQueens(5);
+        runner.checkBackTrackQueens(8, 0);
     }
 }
 
