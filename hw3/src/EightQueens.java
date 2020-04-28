@@ -27,155 +27,132 @@ public class EightQueens {
      * checks if it is in a valid spot first
      */
     private void glueRandomQueens(int k) {
-        int x;
-        int y;
+        int row;
+        int column;
         for (int i = 0; i < k; i++) {
             do {
-                x = getRandomNum();
-                y = getRandomNum();
-            } while (!validateQueen(x, y));
-            chessboard[y][x] = 1;
-            printOutBoard();
-            System.out.println(validateQueen(x, y));
+                row = getRandomNum();
+                column = getRandomNum();
+            } while (!validateQueen(row, column));
+            chessboard[row][column] = 1;
         }
     }
 
     /*
      * Recursively checks and backtracks to find where to place the
-     * back track queens
+     * back track queens, begins from first row and checks each column
      */
-    private boolean checkBackTrackQueens(int queens, int column) {
-        if (column >= queens)
-            return true;
+    private boolean checkBackTrackQueens(int queens, int row) {
 
-        for (int i = 0; i < queens; i++) {
-            if (validateQueen(i, column)) {
-                chessboard[i][column] = 1;
-
-                if (checkBackTrackQueens(queens, column + 1))
-                    return true;
-
-                chessboard[i][column] = 0;
-            }
-        }
         return false;
     }
 
     /*
      * Checks just placed queen and checks if its in valid queen space,
-     * returns true if in valid space
-     * return false if in invalid space
+     * returns TRUE if in VALID space
+     * return FALSE if in INVALID space
      */
-    private boolean validateQueen(int x, int y) {
-        return !( checkRow(x,y) || checkColumn(x,y)
-                || checkUpLeftDiagonal(x,y) || checkDownRightDiagonal(x,y)
-                || checkDownLeftDiagonal(x,y) || checkUpRightDiagonal(x,y) );
-    }
-
-    /*
-     * Checks if another queen exists in the same spot,
-     * returns true if invalid queen space
-     */
-    private boolean checkSameSpot(int x, int y) {
-        return chessboard[y][x] == 1;
+    private boolean validateQueen(int r, int c) {
+        return ( checkRow(r,c) && checkColumn(r,c) && checkUpLeftDiagonal(r,c) && checkDownRightDiagonal(r,c)
+                && checkDownLeftDiagonal(r,c) && checkUpRightDiagonal(r,c) );
     }
 
     /*
      * Looks at the same row as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkRow(int x, int y) {
-        for (int i = 0; i < 8; i++) {
-            if (i != x) {
-                if (chessboard[y][i] == 1) {
-                    return true;
+    private boolean checkRow(int row, int column) {
+        for (int c = 0; c < 8; c++) {
+            if (c != column) {
+                if (chessboard[row][c] == 1) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /*
      * Looks at the same column as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkColumn(int x, int y) {
-        for (int i = 0; i < 8; i++) {
-            if (i != y) {
-                if (chessboard[i][x] == 1) {
-                    return true;
+    private boolean checkColumn(int row, int column) {
+        for (int r = 0; r < 8; r++) {
+            if (r != row) {
+                if (chessboard[r][column] == 1) {
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     /*
      * Looks at the same diagonal (up left) as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkUpLeftDiagonal(int x, int y) {
-        int column = x - 1;
-        int row = y - 1;
-        while (column >= 0 && row >=0) {
-            if (chessboard[row][column] == 1) {
-                return true;
+    private boolean checkUpLeftDiagonal(int row, int column) {
+        int r = row - 1;
+        int c = column - 1;
+        while (r >= 0 && c >= 0) {
+            if (chessboard[r][c] == 1) {
+                return false;
             }
-            column -= 1;
-            row -= 1;
+            r -= 1;
+            c -= 1;
         }
-        return false;
+        return true;
     }
 
     /*
      * Looks at the same diagonal (down right) as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkDownRightDiagonal(int x, int y) {
-        int column = x + 1;
-        int row = y + 1;
-        while (column < 8 && row < 8) {
-            if (chessboard[row][column] == 1) {
-                return true;
+    private boolean checkDownRightDiagonal(int row, int column) {
+        int r = row + 1;
+        int c = column + 1;
+        while (r < 8 && c < 8) {
+            if (chessboard[r][c] == 1) {
+                return false;
             }
-            column += 1;
-            row += 1;
+            r += 1;
+            c += 1;
         }
-        return false;
+        return true;
     }
 
     /*
      * Looks at the same diagonal (down left) as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkDownLeftDiagonal(int x, int y) {
-        int column = x - 1;
-        int row = y + 1;
-        while (column >= 0 && row < 8) {
-            if (chessboard[row][column] == 1) {
-                return true;
+    private boolean checkDownLeftDiagonal(int row, int column) {
+        int r = row + 1;
+        int c = column - 1;
+        while (r < 8 && c >= 0) {
+            if (chessboard[r][c] == 1) {
+                return false;
             }
-            column -= 1;
-            row += 1;
+            r += 1;
+            c -= 1;
         }
-        return false;
+        return true;
     }
 
     /*
      * Looks at the same diagonal (up right) as just placed queen piece,
-     * returns true if invalid queen space
+     * returns TRUE if VALID queen space
      */
-    private boolean checkUpRightDiagonal(int x, int y) {
-        int column = x + 1;
-        int row = y + 1;
-        while (column < 8 && row < 8) {
-            if (chessboard[row][column] == 1) {
-                return true;
+    private boolean checkUpRightDiagonal(int row, int column) {
+        int r = row - 1;
+        int c = column + 1;
+        while (r >= 0 && c < 8) {
+            if (chessboard[r][c] == 1) {
+                return false;
             }
-            column += 1;
-            row += 1;
+            r -= 1;
+            c += 1;
         }
-        return false;
+        return true;
     }
 
     /*
@@ -192,8 +169,7 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        runner.checkBackTrackQueens(8, 0);
-        System.out.println("***********");
+        runner.glueRandomQueens(5);
         runner.printOutBoard();
     }
 }
@@ -202,6 +178,4 @@ public class EightQueens {
  * References used:
  * https://en.wikipedia.org/wiki/Queen_(chess)
  * https://www.programiz.com/java-programming/multidimensional-array
- * https://iq.opengenus.org/8-queens-problem-backtracking/
- * https://www.geeksforgeeks.org/java-program-for-n-queen-problem-backtracking-3/
  */
