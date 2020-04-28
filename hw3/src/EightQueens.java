@@ -22,29 +22,63 @@ public class EightQueens {
     }
 
     /*
-     * Finds a random spot in the board, glues a queen here
-     * by marking this spot in 2d array as a 1,
-     * checks if it is in a valid spot first
+     * Column by column, glues a queen in a random row,
+     * checks if it is in a valid spot first,
+     * once validated, puts a 1 to mark a queen is there
      */
     private void glueRandomQueens(int k) {
         int row;
-        int column;
+        int column = 0;
         for (int i = 0; i < k; i++) {
             do {
                 row = getRandomNum();
-                column = getRandomNum();
-            } while (!validateQueen(row, column) && !checkSameSpot(row, column));
+                column = i;
+            } while (!validateQueen(row, column));
             chessboard[row][column] = 1;
         }
     }
 
     /*
-     * Recursively checks and backtracks to find where to place the
-     * back track queens, begins from first row and checks each column
+     * After randomly generating all queens,
+     * if board leads to impossible state,
+     * board is erased and places random queens again
      */
-    private void checkBackTrackQueens(int numOfQueens, int row) {
+    private void checkRandomlyPlacedQueens(int k) {
+        // k represents last column
+        if ( k <= 8 && !isBoardPossible(k)) {
+            // clears the board
+            for (int r = 0; r < 8; r++) {
+                for (int c = 0; c < 8; c++) {
+                    chessboard[r][c] = 0;
+                }
+            }
+            glueRandomQueens(k);
+        }
+    }
+
+    /*
+     * When randomly placed queens are finished,
+     * check if the board is in a possible state,
+     * goes through column we are on,
+     * and checks if any of its rows are safe to place another queen
+     * returns FALSE is board is in impossible state
+     */
+    private boolean isBoardPossible(int column) {
+        for (int r = 0; r < 8; r++) {
+            if (!validateQueen(r, column)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /*
+     * Recursively checks and backtracks to find where to place the
+     * back track queens, begins from specified row and checks each column
+     */
+    private boolean checkBackTrackQueens(int numOfQueens, int row) {
         if (row == numOfQueens) {
-            // do nothing
+            return true;
         } else {
             for (int c = 0; c < numOfQueens; c++) {
                 chessboard[row][c] = 1;
@@ -54,6 +88,7 @@ public class EightQueens {
                 chessboard[row][c] = 0;
             }
         }
+        return false;
     }
 
     /*
@@ -198,4 +233,5 @@ public class EightQueens {
  * References used:
  * https://en.wikipedia.org/wiki/Queen_(chess)
  * https://www.programiz.com/java-programming/multidimensional-array
+ * https://www.tutorialgateway.org/two-dimensional-array-in-java/
  */
