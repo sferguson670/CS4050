@@ -11,8 +11,7 @@ import java.util.Random;
 public class EightQueens {
     private int[][] chessboard = new int[8][8];
 
-    private static int k_queens = 7;
-    private static int bt_queens = 8 - k_queens;
+    private static int k_queens = 0;
     private static int total_queens = 8;
 
     /*
@@ -39,36 +38,18 @@ public class EightQueens {
     }
 
     /*
-     * After filling up a column with a random queen,
-     * checks if board is in solvable state,
-     * if board is unsolvable, clear column and generate queens again
-     */
-    private boolean checkRandomBoard(int column) {
-        return false;
-    }
-
-    /*
-     * Clears the specified column of the board
-     */
-    private void clearBoard(int column) {
-        for (int r = 0; r < 8; r++) {
-            chessboard[r][column] = 0;
-        }
-    }
-
-    /*
      * Recursively checks and backtracks to find where to place the
      * back track queens, begins from specified column and checks each row
      */
-    private void checkBackTrackQueens(int numOfQueens, int column) {
-        if (column == numOfQueens) {
+    private void checkBackTrackQueens(int column) {
+        if (column == total_queens) {
             printOutBoard();
             System.out.println("*************");
         } else {
-            for (int r = 0; r < numOfQueens; r++) {
+            for (int r = 0; r < total_queens; r++) {
                 chessboard[r][column] = 1;
                 if (validateQueen(r, column)) {
-                    checkBackTrackQueens(numOfQueens, column + 1);
+                    checkBackTrackQueens(column + 1);
                 }
                 chessboard[r][column] = 0;
             }
@@ -198,10 +179,15 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        runner.glueRandomQueens(2);
+
+        Long start = System.nanoTime();
+        runner.glueRandomQueens(k_queens);
         runner.printOutBoard();
-        System.out.println("******************");
-        System.out.println(runner.checkBackTrackQueens(8, 2));
+        System.out.println("****************** backtrack below");
+        runner.checkBackTrackQueens(k_queens);
+        Long stop = System.nanoTime();
+
+        System.out.println("Time taken: " + (stop - start));
     }
 }
 
