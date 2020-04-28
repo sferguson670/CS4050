@@ -13,6 +13,7 @@ public class EightQueens {
 
     private static int k_queens = 7;
     private static int bt_queens = 8 - k_queens;
+    private static int total_queens = 8;
 
     /*
      * Returns a randomized int between 0 - 8
@@ -35,20 +36,23 @@ public class EightQueens {
             } while (!validateQueen(row, column));
             chessboard[row][column] = 1;
         }
-        // after filling up the board, check if solvable, reset if so
-        for (int column = k; column >= 0; column--) {
-            checkBackTrackQueens(8, column);
-        }
     }
 
     /*
-     * Clears the board
+     * After filling up a column with a random queen,
+     * checks if board is in solvable state,
+     * if board is unsolvable, clear column and generate queens again
      */
-    private void clearBoard() {
+    private boolean checkRandomBoard(int column) {
+        return false;
+    }
+
+    /*
+     * Clears the specified column of the board
+     */
+    private void clearBoard(int column) {
         for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                chessboard[r][c] = 0;
-            }
+            chessboard[r][column] = 0;
         }
     }
 
@@ -56,9 +60,10 @@ public class EightQueens {
      * Recursively checks and backtracks to find where to place the
      * back track queens, begins from specified column and checks each row
      */
-    private boolean checkBackTrackQueens(int numOfQueens, int column) {
+    private void checkBackTrackQueens(int numOfQueens, int column) {
         if (column == numOfQueens) {
             printOutBoard();
+            System.out.println("*************");
         } else {
             for (int r = 0; r < numOfQueens; r++) {
                 chessboard[r][column] = 1;
@@ -68,7 +73,6 @@ public class EightQueens {
                 chessboard[r][column] = 0;
             }
         }
-        return false;
     }
 
     /*
@@ -80,15 +84,6 @@ public class EightQueens {
         return ( checkRow(r,c) && checkColumn(r,c)
                 && checkUpLeftDiagonal(r,c) && checkDownRightDiagonal(r,c)
                 && checkDownLeftDiagonal(r,c) && checkUpRightDiagonal(r,c) );
-    }
-
-    /*
-     * Looks at the same spot as queen piece,
-     * has to be empty, no duplicates
-     * returns TRUE if VALID queen space
-     */
-    private boolean checkSameSpot(int row, int column) {
-        return chessboard[row][column] != 1;
     }
 
     /*
@@ -203,9 +198,10 @@ public class EightQueens {
 
     public static void main(String[] args) {
         EightQueens runner = new EightQueens();
-        //runner.checkBackTrackQueens(8, 5);
-        //runner.glueRandomQueens(7);
-        //runner.printOutBoard();
+        runner.glueRandomQueens(2);
+        runner.printOutBoard();
+        System.out.println("******************");
+        System.out.println(runner.checkBackTrackQueens(8, 2));
     }
 }
 
