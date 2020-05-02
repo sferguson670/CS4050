@@ -1,7 +1,8 @@
 /*
  * Sarah Ferguson
  * CS4050 - Assignment 4
- * Write your own random number generator
+ * Write your own random number generator,
+ * positive ints only!
  */
 public class RandomNumber {
     RandomObject[] array = new RandomObject[1000];
@@ -11,7 +12,7 @@ public class RandomNumber {
      * Creates a set array of objects,
      * for each array entry, a new object is created
      */
-    private void createArrayofObjects() {
+    private void createArrayOfObjects() {
         for (int i = 0; i < array.length; i++) {
             array[i] = new RandomObject();
         }
@@ -28,6 +29,7 @@ public class RandomNumber {
         for (int i = 0; i < array.length; i++) {
             object = array[i].toString();
             randomNumber = convertStringToNumber(object) * array[i].getTime();
+            randomNumber = Math.abs(randomNumber);
             System.out.println(randomNumber);
         }
     }
@@ -44,7 +46,7 @@ public class RandomNumber {
 
     public static void main (String[] args) {
         RandomNumber runner = new RandomNumber();
-        runner.createArrayofObjects();
+        runner.createArrayOfObjects();
         runner.getNumberFromArray();
     }
 
