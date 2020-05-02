@@ -4,43 +4,47 @@
  * Write your own random number generator
  */
 public class RandomNumber {
-    RandomObject[] array = new RandomObject[10];
+    EmptyObject[] array = new EmptyObject[1000];
+    String prefix = "RandomNumber$EmptyObject@";
+
+    String object;
+    int randomNumber;
 
     private void createArrayofObjects() {
         for (int i = 0; i < array.length; i++) {
-            array[i] = new RandomObject();
+            array[i] = new EmptyObject();
         }
     }
 
     private void getNumberFromArray() {
         for (int i = 0; i < array.length; i++) {
-            System.out.println(array[i].toString());
+            object = array[i].toString();
+            randomNumber += convertStringToNumber(object);
         }
+    }
+
+    private int convertStringToNumber(String input) {
+        String number = input.replace(prefix, "");
+        number = number.substring(number.length()-1);
+        return Integer.parseInt(number, 16);
     }
 
     public static void main (String[] args) {
         RandomNumber runner = new RandomNumber();
         runner.createArrayofObjects();
         runner.getNumberFromArray();
+        System.out.println(runner.randomNumber);
     }
 
     /*
      * Class to represent a new object,
      * each object will contain the time it was created
      */
-    class RandomObject {
-        private Long time;
+    class EmptyObject {
 
-        public RandomObject() {
-            setTime();
+        public EmptyObject() {
+            // do nothing
         }
 
-        private void setTime() {
-            time = System.nanoTime();
-        }
-
-        private Long getTime() {
-            return time;
-        }
     }
 }
