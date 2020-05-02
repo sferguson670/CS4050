@@ -4,28 +4,41 @@
  * Write your own random number generator
  */
 public class RandomNumber {
-    EmptyObject[] array = new EmptyObject[1000];
-    String prefix = "RandomNumber$EmptyObject@";
+    RandomObject[] array = new RandomObject[1000];
+    String prefix = "RandomNumber$RandomObject@";
 
-    String object;
-    int randomNumber;
-
+    /*
+     * Creates a set array of objects,
+     * for each array entry, a new object is created
+     */
     private void createArrayofObjects() {
         for (int i = 0; i < array.length; i++) {
-            array[i] = new EmptyObject();
+            array[i] = new RandomObject();
         }
     }
 
+    /*
+     * Takes the toString value from created object
+     * and multiplies it with the time from created object
+     * returns a "random number" for each entry of the array
+     */
     private void getNumberFromArray() {
+        String object = "";
+        int randomNumber = 0;
         for (int i = 0; i < array.length; i++) {
             object = array[i].toString();
-            randomNumber += convertStringToNumber(object);
+            randomNumber = convertStringToNumber(object) * array[i].getTime();
+            System.out.println(randomNumber);
         }
     }
 
+    /*
+     * Takes the toString value of object, only takes the last 3 values of it,
+     * it's originally in hexadecimal so its converted to integer
+     */
     private int convertStringToNumber(String input) {
         String number = input.replace(prefix, "");
-        number = number.substring(number.length()-1);
+        number = number.substring(number.length()-3);
         return Integer.parseInt(number, 16);
     }
 
@@ -33,18 +46,25 @@ public class RandomNumber {
         RandomNumber runner = new RandomNumber();
         runner.createArrayofObjects();
         runner.getNumberFromArray();
-        System.out.println(runner.randomNumber);
     }
 
     /*
      * Class to represent a new object,
      * each object will contain the time it was created
      */
-    class EmptyObject {
+    class RandomObject {
+        Long time;
 
-        public EmptyObject() {
-            // do nothing
+        public RandomObject() {
+            setTime();
         }
 
+        private void setTime() {
+            time = System.nanoTime();
+        }
+
+        private int getTime() {
+            return time.intValue();
+        }
     }
 }
