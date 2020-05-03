@@ -2,7 +2,7 @@
  * Sarah Ferguson
  * CS4050 - Assignment 4
  * Use random number generator from programming language,
- * positive ints up to 1000 only
+ * positive ints 0 to 999
  */
 import java.util.Random;
 
@@ -10,7 +10,7 @@ public class JavaRandom {
     Random random = new Random();
 
     private int getRandomInt() {
-        return random.nextInt(1001);
+        return random.nextInt(1000);
     }
 
     public static void main (String[] args) {

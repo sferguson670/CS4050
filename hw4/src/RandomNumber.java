@@ -2,10 +2,10 @@
  * Sarah Ferguson
  * CS4050 - Assignment 4
  * Write your own random number generator,
- * positive ints up to 1000 only
+ * positive ints 0 to 999
  */
 public class RandomNumber {
-    RandomObject[] array = new RandomObject[1000000];
+    RandomObject[] array = new RandomObject[250000];
     String prefix = "RandomNumber$RandomObject@";
 
     /*
@@ -43,18 +43,18 @@ public class RandomNumber {
      */
     private int convertStringToNumber(String input) {
         String number = input.replace(prefix, "");
-        number = number.substring(number.length() - 1);
+        number = number.substring(number.length() - 2);
         return Integer.parseInt(number, 16);
     }
 
     /*
      * Takes the numbers that was derived from object and current time,
      * multiplies them together,
-     * if value is > 1000, returns the leftover from 1000
+     * if value is > 1000, keeps on subtracting 1000 until it's less than
      */
     private int getRandomNumber(int objNum, int timeNum) {
-        int num = objNum * timeNum;
-        if (num > 1000) {
+        int num = objNum * timeNum + timeNum;
+        while (num > 1000) {
             num = num - 1000;
         }
         return num;
@@ -68,7 +68,8 @@ public class RandomNumber {
 
     /*
      * Class to represent a new object,
-     * each object will contain the time it was created
+     * each object will contain the time it was created,
+     * we are taking the last 2 numbers (excluding very last one) from nano time
      */
     static class RandomObject {
         Long time;
@@ -82,8 +83,9 @@ public class RandomNumber {
         }
 
         private int getTime() {
-            int value = time.intValue();
-            return Math.abs(value % 100);
+            String nanoseconds = time.toString();
+            nanoseconds = nanoseconds.substring(12, nanoseconds.length()-1);
+            return Integer.parseInt(nanoseconds);
         }
     }
 }
