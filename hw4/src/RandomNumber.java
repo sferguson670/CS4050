@@ -2,10 +2,10 @@
  * Sarah Ferguson
  * CS4050 - Assignment 4
  * Write your own random number generator,
- * positive ints only!
+ * positive ints up to 1000 only
  */
 public class RandomNumber {
-    RandomObject[] array = new RandomObject[1000];
+    RandomObject[] array = new RandomObject[1000000];
     String prefix = "RandomNumber$RandomObject@";
 
     /*
@@ -19,35 +19,51 @@ public class RandomNumber {
     }
 
     /*
-     * Takes the toString value from created object
-     * and multiplies it with the time from created object
+     * Takes the toString value from created object, uses for objectNum
+     * Takes the getTime value from created object, uses for timeNum
      * returns a "random number" for each entry of the array
      */
-    private void getNumberFromArray() {
+    private void getNumbersFromArray() {
         String object = "";
-        int randomNumber = 0;
+        int objectNum = 0;
+        int timeNum = 0;
+
         for (int i = 0; i < array.length; i++) {
             object = array[i].toString();
-            randomNumber = convertStringToNumber(object) * array[i].getTime();
-            randomNumber = Math.abs(randomNumber);
-            System.out.println(randomNumber);
+            objectNum = convertStringToNumber(object);
+            timeNum = array[i].getTime();
+
+            System.out.println(getRandomNumber(objectNum, timeNum));
         }
     }
 
     /*
-     * Takes the toString value of object, only takes the last 3 values of it,
+     * Takes the toString value of object, only takes the last value of it,
      * it's originally in hexadecimal so its converted to integer
      */
     private int convertStringToNumber(String input) {
         String number = input.replace(prefix, "");
-        number = number.substring(number.length()-3);
+        number = number.substring(number.length() - 1);
         return Integer.parseInt(number, 16);
+    }
+
+    /*
+     * Takes the numbers that was derived from object and current time,
+     * multiplies them together,
+     * if value is > 1000, returns the leftover from 1000
+     */
+    private int getRandomNumber(int objNum, int timeNum) {
+        int num = objNum * timeNum;
+        if (num > 1000) {
+            num = num - 1000;
+        }
+        return num;
     }
 
     public static void main (String[] args) {
         RandomNumber runner = new RandomNumber();
         runner.createArrayOfObjects();
-        runner.getNumberFromArray();
+        runner.getNumbersFromArray();
     }
 
     /*
@@ -66,7 +82,8 @@ public class RandomNumber {
         }
 
         private int getTime() {
-            return time.intValue();
+            int value = time.intValue();
+            return Math.abs(value % 100);
         }
     }
 }

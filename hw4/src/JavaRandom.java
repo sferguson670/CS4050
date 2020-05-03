@@ -2,16 +2,16 @@
  * Sarah Ferguson
  * CS4050 - Assignment 4
  * Use random number generator from programming language,
- * positive ints only!
+ * positive ints up to 1000 only
  */
 import java.util.Random;
 
 public class JavaRandom {
-    private static int numOfRandoms = 1000;
+    private static int numOfRandoms = 1000000;
     Random random = new Random();
 
     private int getRandomInt() {
-        return random.nextInt(Integer.MAX_VALUE);
+        return random.nextInt(1001);
     }
 
     public static void main (String[] args) {
