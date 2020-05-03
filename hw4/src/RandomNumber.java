@@ -24,14 +24,14 @@ public class RandomNumber {
      * returns a "random number" for each entry of the array
      */
     private void getNumbersFromArray() {
-        String object = "";
-        int objectNum = 0;
-        int timeNum = 0;
+        String object;
+        int objectNum;
+        int timeNum;
 
-        for (int i = 0; i < array.length; i++) {
-            object = array[i].toString();
+        for (RandomObject randomObject : array) {
+            object = randomObject.toString();
             objectNum = convertStringToNumber(object);
-            timeNum = array[i].getTime();
+            timeNum = randomObject.getTime();
 
             System.out.println(getRandomNumber(objectNum, timeNum));
         }
@@ -70,7 +70,7 @@ public class RandomNumber {
      * Class to represent a new object,
      * each object will contain the time it was created
      */
-    class RandomObject {
+    static class RandomObject {
         Long time;
 
         public RandomObject() {

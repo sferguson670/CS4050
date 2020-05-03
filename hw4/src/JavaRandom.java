@@ -7,7 +7,6 @@
 import java.util.Random;
 
 public class JavaRandom {
-    private static int numOfRandoms = 1000000;
     Random random = new Random();
 
     private int getRandomInt() {
@@ -17,6 +16,7 @@ public class JavaRandom {
     public static void main (String[] args) {
         JavaRandom runner = new JavaRandom();
 
+        int numOfRandoms = 1000000;
         for (int i = 0; i < numOfRandoms; i++) {
             System.out.println(runner.getRandomInt());
         }
