@@ -17,21 +17,24 @@ public class Currency {
     private int numOfCurrencies;
 
     private void readFile() {
+        boolean startOfFile = false;
         try {
             Scanner in = new Scanner(new FileInputStream(INPUT_FILE));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
 
                 if (line.length() > 0 && line.charAt(0) == '*')
-                    continue;
+                    startOfFile = true;
 
-                System.out.println(line);
-                /*
-                String data[] = line.split(",");
-                String fromCountry = data[0];
-                String toCountry = data[1];
-                double currencyRate = Double.parseDouble(data[2]);
-                 */
+                if (startOfFile && line.length() > 0 && line.charAt(0) != '*') {
+                    System.out.println(line);
+                    /*
+                    String data[] = line.split(",");
+                    String fromCountry = data[0];
+                    String toCountry = data[1];
+                    double currencyRate = Double.parseDouble(data[2]);
+                     */
+                }
             }
             in.close();
         }
