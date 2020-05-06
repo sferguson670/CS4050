@@ -57,7 +57,11 @@ public class Currency {
         runner.readFile();
         WeightedGraph graph = new WeightedGraph();
         WeightedGraph.Node node = new WeightedGraph.Node("hi");
+        WeightedGraph.Node node2 = new WeightedGraph.Node("hello");
         graph.addVertex(node);
+        WeightedGraph.Edge edge = new WeightedGraph.Edge(node2, 32.3);
+        node.addEdge(edge);
+        System.out.println(node.getEdges());
         System.out.println(graph.getVertices());
     }
 }

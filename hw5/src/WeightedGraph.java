@@ -13,7 +13,7 @@ import java.util.Set;
 
 /*
  * Class to represent the whole weighted graph,
- * each graph has a vertex, which has a set of edges to it
+ * each graph has a node, which has a set of edges to it
  */
 public class WeightedGraph {
     private Set<Node> nodes;
@@ -79,7 +79,7 @@ public class WeightedGraph {
      * will contain the currency rate,
      * and will contain what node it connects to
      */
-    class Edge {
+    static class Edge {
         private Node toNode;
         private double currencyRate;
 
