@@ -16,37 +16,59 @@ import java.util.Set;
  * each graph has a vertex, which has a set of edges to it
  */
 public class WeightedGraph {
-    private Set<Vertex> vertices;
+    private Set<Node> nodes;
 
     public WeightedGraph() {
-        vertices = new HashSet<>();
-    }
-
-    public List<Vertex> getVertices() {
-        return new ArrayList<>(vertices);
-    }
-
-    public boolean addVertex(Vertex vertex) {
-        return vertices.add(vertex);
+        nodes = new HashSet<>();
     }
 
     /*
-     * Class to represent a vertex of the weighted graph,
+     * Adds a vertex to the graph,
+     * it is added to the list of vertices
+     */
+    public boolean addVertex(Node node) {
+        return nodes.add(node);
+    }
+
+    /*
+     * Returns all the vertices that is in the graph
+     */
+    public List<Node> getVertices() {
+        return new ArrayList<>(nodes);
+    }
+
+    /*
+     * Class to represent a Node of the weighted graph,
      * will contain information of what the currency is,
      * and will have a list of edges of what the node connects to
      */
-    class Vertex {
-        private String currencyLabel;
+    static class Node {
+        private String countryLabel;
         private Set<Edge> edges;
 
-        public String getCurrencyLabel() {
-            return currencyLabel;
+        public Node(String currencyLabel) {
+            this.countryLabel = currencyLabel;
+            edges = new HashSet<>();
         }
 
+        /*
+         * Returns the country that the node represents
+         */
+        public String getCountryLabel() {
+            return countryLabel;
+        }
+
+        /*
+         * Adds an edge to the node,
+         * gets added to list of edges
+         */
         public boolean addEdge(Edge edge) {
             return edges.add(edge);
         }
 
+        /*
+         * Returns all the edges that is associated to node
+         */
         public List<Edge> getEdges() {
             return new ArrayList<>(edges);
         }
@@ -58,15 +80,15 @@ public class WeightedGraph {
      * and will contain what node it connects to
      */
     class Edge {
-        private Vertex toNode;
+        private Node toNode;
         private double currencyRate;
 
-        public Edge(Vertex toNode, double currencyRate) {
+        public Edge(Node toNode, double currencyRate) {
             this.toNode = toNode;
             this.currencyRate = currencyRate;
         }
 
-        public Vertex getToNode() {
+        public Node getToNode() {
             return toNode;
         }
 

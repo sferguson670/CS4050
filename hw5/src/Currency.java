@@ -26,14 +26,11 @@ public class Currency {
                 if (line.length() > 0 && line.charAt(0) == '*')
                     startOfFile = true;
 
-                if (startOfFile && line.length() > 0 && line.charAt(0) != '*') {
-                    System.out.println(line);
-                    /*
-                    String data[] = line.split(",");
+                if (startOfFile && line.length() > 0 && Character.isAlphabetic(line.charAt(0))) {
+                    String data[] = line.split("\\s+");
                     String fromCountry = data[0];
                     String toCountry = data[1];
                     double currencyRate = Double.parseDouble(data[2]);
-                     */
                 }
             }
             in.close();
@@ -43,7 +40,11 @@ public class Currency {
         }
     }
 
-    private void buildWeightedGraph() {
+    private void addVertexToGraph(String country) {
+
+    }
+
+    private void addEdgeToGraph(String fromCountry, String toCountry, double currencyRate) {
 
     }
 
@@ -54,5 +55,9 @@ public class Currency {
     public static void main (String[] args) {
         Currency runner = new Currency();
         runner.readFile();
+        WeightedGraph graph = new WeightedGraph();
+        WeightedGraph.Node node = new WeightedGraph.Node("hi");
+        graph.addVertex(node);
+        System.out.println(graph.getVertices());
     }
 }
