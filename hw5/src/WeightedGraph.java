@@ -43,19 +43,19 @@ public class WeightedGraph {
      * and will have a list of edges of what the node connects to
      */
     static class Node {
-        private String countryLabel;
+        private String currencyLabel;
         private Set<Edge> edges;
 
         public Node(String currencyLabel) {
-            this.countryLabel = currencyLabel;
+            this.currencyLabel = currencyLabel;
             edges = new HashSet<>();
         }
 
         /*
-         * Returns the country that the node represents
+         * Returns the currency that the node represents
          */
-        public String getCountryLabel() {
-            return countryLabel;
+        public String getCurrencyLabel() {
+            return currencyLabel;
         }
 
         /*
@@ -76,24 +76,30 @@ public class WeightedGraph {
 
     /*
      * Class to represent an edge of the weighted graph,
-     * will contain the currency rate,
+     * will contain the exchange rate,
      * and will contain what node it connects to
      */
     static class Edge {
         private Node toNode;
-        private double currencyRate;
+        private double exchangeRate;
 
         public Edge(Node toNode, double currencyRate) {
             this.toNode = toNode;
-            this.currencyRate = currencyRate;
+            this.exchangeRate = currencyRate;
         }
 
+        /*
+         * Returns the currency the node connects to
+         */
         public Node getToNode() {
             return toNode;
         }
 
-        public double getCurrencyRate() {
-            return currencyRate;
+        /*
+         * Returns the exchange rate
+         */
+        public double getExchangeRate() {
+            return exchangeRate;
         }
     }
 }

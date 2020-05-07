@@ -8,13 +8,12 @@
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Currency {
     private static String INPUT_FILE = "exchangeRatesF2016.txt";
-
-    private int[] fileLines;
-    private int numOfCurrencies;
+    private static WeightedGraph currencyGraph = new WeightedGraph();
 
     private void readFile() {
         boolean startOfFile = false;
@@ -31,6 +30,7 @@ public class Currency {
                     String fromCountry = data[0];
                     String toCountry = data[1];
                     double currencyRate = Double.parseDouble(data[2]);
+                    addDataToGraph(fromCountry, toCountry, currencyRate);
                 }
             }
             in.close();
@@ -40,12 +40,60 @@ public class Currency {
         }
     }
 
-    private void addVertexToGraph(String country) {
-
+    private void addDataToGraph(String fromCountry, String toCountry, double currencyRate) {
+        if (getSpecifiedNode(fromCountry) == null) {
+            addNodeToGraph(fromCountry);
+        }
+        if (getSpecifiedNode(toCountry) == null) {
+            addNodeToGraph(toCountry);
+        }
+        addEdgeToGraph(fromCountry, toCountry, currencyRate);
     }
 
-    private void addEdgeToGraph(String fromCountry, String toCountry, double currencyRate) {
+    /*
+     * Looks through all existing nodes in graph,
+     * if exists, then it will return specified country node
+     * if not, then it will return null
+     */
+    private WeightedGraph.Node getSpecifiedNode(String country) {
+        List<WeightedGraph.Node> existingNodes = currencyGraph.getVertices();
+        for (int i = 0; i < existingNodes.size(); i++) {
+            if (existingNodes.get(i).getCurrencyLabel().equals(country)) {
+                return existingNodes.get(i);
+            }
+        }
+        return null;
+    }
 
+    /*
+     * Checks to see if country already exists as a node,
+     * if it doesn't, then it adds it to the graph
+     */
+    private void addNodeToGraph(String country) {
+        if (getSpecifiedNode(country) == null) {
+            WeightedGraph.Node temp = new WeightedGraph.Node(country);
+            currencyGraph.addVertex(temp);
+        }
+    }
+
+    /*
+     * Checks all graph vertices to find the fromCountry node,
+     * then adds a new Edge with all provided info
+     * and adds the edge to each of the nodes (to show reciprocal relationship)
+     * ex) fromCountry ------> toCountry
+     *     toCountry   ------> fromCountry
+     */
+    private void addEdgeToGraph(String fromCountry, String toCountry, double currencyRate) {
+        WeightedGraph.Node fromCountryNode = getSpecifiedNode(fromCountry);
+        WeightedGraph.Node toCountryNode = getSpecifiedNode(toCountry);
+
+        // creates edge: fromCountry -> toCountry
+        WeightedGraph.Edge edge1 = new WeightedGraph.Edge(toCountryNode, currencyRate);
+        fromCountryNode.addEdge(edge1);
+
+        // creates edge: toCountry -> fromCountry
+        WeightedGraph.Edge edge2 = new WeightedGraph.Edge(fromCountryNode, currencyRate);
+        toCountryNode.addEdge(edge2);
     }
 
     private void getTradeSequences() {
@@ -55,13 +103,13 @@ public class Currency {
     public static void main (String[] args) {
         Currency runner = new Currency();
         runner.readFile();
-        WeightedGraph graph = new WeightedGraph();
-        WeightedGraph.Node node = new WeightedGraph.Node("hi");
-        WeightedGraph.Node node2 = new WeightedGraph.Node("hello");
-        graph.addVertex(node);
-        WeightedGraph.Edge edge = new WeightedGraph.Edge(node2, 32.3);
-        node.addEdge(edge);
-        System.out.println(node.getEdges());
-        System.out.println(graph.getVertices());
+        List<WeightedGraph.Node> nodes = currencyGraph.getVertices();
+        for (int i = 0; i < nodes.size(); i++) {
+            System.out.println(nodes.get(i).getCurrencyLabel());
+            List<WeightedGraph.Edge> edges = nodes.get(i).getEdges();
+            for (int j = 0; j < edges.size(); j++) {
+                System.out.println(edges.get(j).getExchangeRate());
+            }
+        }
     }
 }
