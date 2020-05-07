@@ -12,11 +12,11 @@ import java.util.*;
 
 public class Currency {
     private static WeightedGraph currencyGraph = new WeightedGraph();
-    private static String INPUT_FILE = "exchangeRatesF2016.txt";
-    private static int numOfCurrencies;
+    private static String INPUT_FILE = "exchangeRatesTest.txt";
 
-    private String startingCountry = "Dollar";
-    private double startingInvestment = 1000;
+    private static int numOfCurrencies;
+    private static String startingCountry = "Canada";
+    private static double startingInvestment = 1000;
 
     private Map<ArrayList<WeightedGraph.Edge>, Double> exchanges = new HashMap<>();
 
@@ -127,7 +127,7 @@ public class Currency {
         WeightedGraph.Node toNode = exchange.getToNode();
         System.out.println(exchange.toString());
 
-        if (level > 3 || toNode.getCurrencyLabel().equals(startingCountry)) {
+        if (level > numOfCurrencies - 1 || toNode.getCurrencyLabel().equals(startingCountry)) {
             if (toNode.getCurrencyLabel().equals(startingCountry)) {
                 double exchangeAmount = getExchangeAmount(investment, exchange.getExchangeRate());
                 System.out.println(exchange.toString());
@@ -146,7 +146,7 @@ public class Currency {
             }
         } else {
             List<WeightedGraph.Edge> toNodeEdges = toNode.getEdges();
-            for (int i = 0; i < 3 - 1; i++) {
+            for (int i = 0; i < toNodeEdges.size(); i++) {
                 double newInvestment = getExchangeAmount(investment, toNodeEdges.get(i).getExchangeRate());
                 getAllCurrencyExchanges(toNodeEdges.get(i), newInvestment, level+1);
             }
@@ -178,11 +178,10 @@ public class Currency {
     public static void main (String[] args) {
         Currency runner = new Currency();
         runner.readFile();
-        WeightedGraph.Node start = runner.getSpecifiedNode("Dollar");
-        runner.getAllCurrencyExchanges(start.getEdges().get(0), 1000, 1);
-        /*
+        WeightedGraph.Node start = runner.getSpecifiedNode(startingCountry);
+        //runner.getAllCurrencyExchanges(start.getEdges().get(0), startingInvestment, 1);
         for (int i = 0; i < start.getEdges().size(); i++) {
-            runner.getAllCurrencyExchanges(start.getEdges().get(i), 1000, 1);
+            runner.getAllCurrencyExchanges(start.getEdges().get(i), startingInvestment, 1);
             //System.out.println(start.getEdges().get(i).toString());
         }
         /*
