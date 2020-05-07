@@ -97,12 +97,12 @@ public class Currency {
         WeightedGraph.Node fromCurrencyNode = getSpecifiedNode(fromCurrency);
         WeightedGraph.Node toCurrencyNode = getSpecifiedNode(toCurrency);
 
-        // creates edge: fromCountry -> toCountry
-        WeightedGraph.Edge edge1 = new WeightedGraph.Edge(toCurrencyNode, exchangeRate);
+        // creates edge: fromCurrency -> toCurrency
+        WeightedGraph.Edge edge1 = new WeightedGraph.Edge(fromCurrencyNode, toCurrencyNode, exchangeRate);
         fromCurrencyNode.addEdge(edge1);
 
-        // creates edge: toCountry -> fromCountry
-        WeightedGraph.Edge edge2 = new WeightedGraph.Edge(fromCurrencyNode, exchangeRate);
+        // creates edge: toCurrency -> fromCurrency
+        WeightedGraph.Edge edge2 = new WeightedGraph.Edge(toCurrencyNode, fromCurrencyNode, exchangeRate);
         toCurrencyNode.addEdge(edge2);
     }
 

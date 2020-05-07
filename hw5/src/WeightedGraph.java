@@ -72,6 +72,10 @@ public class WeightedGraph {
         public List<Edge> getEdges() {
             return new ArrayList<>(edges);
         }
+
+        public String toString() {
+            return "currency: " + currencyLabel;
+        }
     }
 
     /*
@@ -80,16 +84,28 @@ public class WeightedGraph {
      * and will contain what node it connects to
      */
     static class Edge {
+        private Node fromNode;
         private Node toNode;
         private double exchangeRate;
 
-        public Edge(Node toNode, double currencyRate) {
+        /*
+         * Initializer
+         */
+        public Edge(Node fromNode, Node toNode, double currencyRate) {
+            this.fromNode = fromNode;
             this.toNode = toNode;
             this.exchangeRate = currencyRate;
         }
 
         /*
-         * Returns the currency the node connects to
+         * Returns the currency node the edge comes from
+         */
+        public Node getFromNode() {
+            return fromNode;
+        }
+
+        /*
+         * Returns the currency node the edge connects to
          */
         public Node getToNode() {
             return toNode;
@@ -100,6 +116,14 @@ public class WeightedGraph {
          */
         public double getExchangeRate() {
             return exchangeRate;
+        }
+
+        /*
+         * Prints out exchange rate and what node it goes to
+         */
+        public String toString() {
+            return "comes from " + fromNode.toString() + " exchange rate: "
+                    + exchangeRate + " to " + toNode.toString();
         }
     }
 }
