@@ -130,16 +130,23 @@ public class Currency {
         if (level > 3 || toNode.getCurrencyLabel().equals(startingCountry)) {
             if (toNode.getCurrencyLabel().equals(startingCountry)) {
                 double exchangeAmount = getExchangeAmount(investment, exchange.getExchangeRate());
+                System.out.println(exchange.toString());
+                System.out.println("final currency: " + exchangeAmount + " at " + toNode.toString());
+                System.out.println("gained this amount: " + (exchangeAmount - startingInvestment));
+                System.out.println("**********************");
+                /*
                 if (exchangeAmount > startingInvestment) {
                     System.out.println(exchange.toString());
                     System.out.println("final currency: " + exchangeAmount + " at " + toNode.toString());
                     System.out.println("gained this amount: " + (exchangeAmount - startingInvestment));
                     System.out.println("**********************");
                 }
+
+                 */
             }
         } else {
             List<WeightedGraph.Edge> toNodeEdges = toNode.getEdges();
-            for (int i = 0; i < toNodeEdges.size(); i++) {
+            for (int i = 0; i < 3 - 1; i++) {
                 double newInvestment = getExchangeAmount(investment, toNodeEdges.get(i).getExchangeRate());
                 getAllCurrencyExchanges(toNodeEdges.get(i), newInvestment, level+1);
             }
@@ -172,8 +179,11 @@ public class Currency {
         Currency runner = new Currency();
         runner.readFile();
         WeightedGraph.Node start = runner.getSpecifiedNode("Dollar");
+        runner.getAllCurrencyExchanges(start.getEdges().get(0), 1000, 1);
+        /*
         for (int i = 0; i < start.getEdges().size(); i++) {
             runner.getAllCurrencyExchanges(start.getEdges().get(i), 1000, 1);
+            //System.out.println(start.getEdges().get(i).toString());
         }
         /*
         Map<WeightedGraph.Edge, Double> currencyExchanges = runner.getCurrencyExchanges(currencyGraph.getNodes().get(0), 1000);
