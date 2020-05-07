@@ -124,13 +124,15 @@ public class Currency {
     }
 
     private void getAllCurrencyExchanges(WeightedGraph.Edge exchange, double investment, int level) {
+        level++;
+        System.out.println(level);
         WeightedGraph.Node toNode = exchange.getToNode();
         System.out.println(exchange.toString());
 
         if (level > numOfCurrencies - 1 || toNode.getCurrencyLabel().equals(startingCountry)) {
             if (toNode.getCurrencyLabel().equals(startingCountry)) {
                 double exchangeAmount = getExchangeAmount(investment, exchange.getExchangeRate());
-                System.out.println(exchange.toString());
+                //System.out.println(exchange.toString());
                 System.out.println("final currency: " + exchangeAmount + " at " + toNode.toString());
                 System.out.println("gained this amount: " + (exchangeAmount - startingInvestment));
                 System.out.println("**********************");
@@ -148,7 +150,7 @@ public class Currency {
             List<WeightedGraph.Edge> toNodeEdges = toNode.getEdges();
             for (int i = 0; i < toNodeEdges.size(); i++) {
                 double newInvestment = getExchangeAmount(investment, toNodeEdges.get(i).getExchangeRate());
-                getAllCurrencyExchanges(toNodeEdges.get(i), newInvestment, level+1);
+                getAllCurrencyExchanges(toNodeEdges.get(i), newInvestment, level);
             }
         }
     }
@@ -181,7 +183,7 @@ public class Currency {
         WeightedGraph.Node start = runner.getSpecifiedNode(startingCountry);
         //runner.getAllCurrencyExchanges(start.getEdges().get(0), startingInvestment, 1);
         for (int i = 0; i < start.getEdges().size(); i++) {
-            runner.getAllCurrencyExchanges(start.getEdges().get(i), startingInvestment, 1);
+            runner.getAllCurrencyExchanges(start.getEdges().get(i), startingInvestment, 0);
             //System.out.println(start.getEdges().get(i).toString());
         }
         /*
