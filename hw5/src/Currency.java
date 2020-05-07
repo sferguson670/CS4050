@@ -12,9 +12,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Currency {
-    private static String INPUT_FILE = "exchangeRatesF2016.txt";
     private static WeightedGraph currencyGraph = new WeightedGraph();
+    private static String INPUT_FILE = "exchangeRatesF2016.txt";
 
+    /*
+     * Reads the input file,
+     * goes through line by line and extracts needed data:
+     * currency1, currency2, exchangeRate
+     */
     private void readFile() {
         boolean startOfFile = false;
         try {
@@ -27,10 +32,10 @@ public class Currency {
 
                 if (startOfFile && line.length() > 0 && Character.isAlphabetic(line.charAt(0))) {
                     String data[] = line.split("\\s+");
-                    String fromCountry = data[0];
-                    String toCountry = data[1];
-                    double currencyRate = Double.parseDouble(data[2]);
-                    addDataToGraph(fromCountry, toCountry, currencyRate);
+                    String fromCurrency = data[0];
+                    String toCurrency = data[1];
+                    double exchangeRate = Double.parseDouble(data[2]);
+                    addDataToGraph(fromCurrency, toCurrency, exchangeRate);
                 }
             }
             in.close();
@@ -40,14 +45,30 @@ public class Currency {
         }
     }
 
-    private void addDataToGraph(String fromCountry, String toCountry, double currencyRate) {
-        if (getSpecifiedNode(fromCountry) == null) {
-            addNodeToGraph(fromCountry);
+    /*
+     * Gets all inputs from each line of data,
+     * will create nodes for each country if necessary,
+     * will add edge between each country
+     */
+    private void addDataToGraph(String fromCurrency, String toCurrency, double exchangeRate) {
+        if (getSpecifiedNode(fromCurrency) == null) {
+            addNodeToGraph(fromCurrency);
         }
-        if (getSpecifiedNode(toCountry) == null) {
-            addNodeToGraph(toCountry);
+        if (getSpecifiedNode(toCurrency) == null) {
+            addNodeToGraph(toCurrency);
         }
-        addEdgeToGraph(fromCountry, toCountry, currencyRate);
+        addEdgeToGraph(fromCurrency, toCurrency, exchangeRate);
+    }
+
+    /*
+     * Checks to see if country already exists as a node,
+     * if it doesn't, then it adds it to the graph
+     */
+    private void addNodeToGraph(String currency) {
+        if (getSpecifiedNode(currency) == null) {
+            WeightedGraph.Node temp = new WeightedGraph.Node(currency);
+            currencyGraph.addVertex(temp);
+        }
     }
 
     /*
@@ -55,10 +76,10 @@ public class Currency {
      * if exists, then it will return specified country node
      * if not, then it will return null
      */
-    private WeightedGraph.Node getSpecifiedNode(String country) {
+    private WeightedGraph.Node getSpecifiedNode(String currency) {
         List<WeightedGraph.Node> existingNodes = currencyGraph.getVertices();
         for (int i = 0; i < existingNodes.size(); i++) {
-            if (existingNodes.get(i).getCurrencyLabel().equals(country)) {
+            if (existingNodes.get(i).getCurrencyLabel().equals(currency)) {
                 return existingNodes.get(i);
             }
         }
@@ -66,34 +87,23 @@ public class Currency {
     }
 
     /*
-     * Checks to see if country already exists as a node,
-     * if it doesn't, then it adds it to the graph
-     */
-    private void addNodeToGraph(String country) {
-        if (getSpecifiedNode(country) == null) {
-            WeightedGraph.Node temp = new WeightedGraph.Node(country);
-            currencyGraph.addVertex(temp);
-        }
-    }
-
-    /*
      * Checks all graph vertices to find the fromCountry node,
      * then adds a new Edge with all provided info
      * and adds the edge to each of the nodes (to show reciprocal relationship)
-     * ex) fromCountry ------> toCountry
-     *     toCountry   ------> fromCountry
+     * ex) fromCurrency ------> toCurrency
+     *     toCurrency   ------> fromCurrency
      */
-    private void addEdgeToGraph(String fromCountry, String toCountry, double currencyRate) {
-        WeightedGraph.Node fromCountryNode = getSpecifiedNode(fromCountry);
-        WeightedGraph.Node toCountryNode = getSpecifiedNode(toCountry);
+    private void addEdgeToGraph(String fromCurrency, String toCurrency, double exchangeRate) {
+        WeightedGraph.Node fromCurrencyNode = getSpecifiedNode(fromCurrency);
+        WeightedGraph.Node toCurrencyNode = getSpecifiedNode(toCurrency);
 
         // creates edge: fromCountry -> toCountry
-        WeightedGraph.Edge edge1 = new WeightedGraph.Edge(toCountryNode, currencyRate);
-        fromCountryNode.addEdge(edge1);
+        WeightedGraph.Edge edge1 = new WeightedGraph.Edge(toCurrencyNode, exchangeRate);
+        fromCurrencyNode.addEdge(edge1);
 
         // creates edge: toCountry -> fromCountry
-        WeightedGraph.Edge edge2 = new WeightedGraph.Edge(fromCountryNode, currencyRate);
-        toCountryNode.addEdge(edge2);
+        WeightedGraph.Edge edge2 = new WeightedGraph.Edge(fromCurrencyNode, exchangeRate);
+        toCurrencyNode.addEdge(edge2);
     }
 
     private void getTradeSequences() {
