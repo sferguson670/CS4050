@@ -23,17 +23,17 @@ public class WeightedGraph {
     }
 
     /*
-     * Adds a vertex to the graph,
+     * Adds a node to the graph,
      * it is added to the list of vertices
      */
-    public boolean addVertex(Node node) {
-        return nodes.add(node);
+    public void addNode(Node node) {
+        nodes.add(node);
     }
 
     /*
-     * Returns all the vertices that is in the graph
+     * Returns all the nodes that is in the graph
      */
-    public List<Node> getVertices() {
+    public List<Node> getNodes() {
         return new ArrayList<>(nodes);
     }
 
@@ -62,8 +62,8 @@ public class WeightedGraph {
          * Adds an edge to the node,
          * gets added to list of edges
          */
-        public boolean addEdge(Edge edge) {
-            return edges.add(edge);
+        public void addEdge(Edge edge) {
+            edges.add(edge);
         }
 
         /*
@@ -122,8 +122,8 @@ public class WeightedGraph {
          * Prints out exchange rate and what node it goes to
          */
         public String toString() {
-            return "comes from " + fromNode.toString() + " exchange rate: "
-                    + exchangeRate + " to " + toNode.toString();
+            return "comes from " + fromNode.toString() + " -> exchange rate: "
+                    + exchangeRate + " -> " + toNode.toString();
         }
     }
 }

@@ -8,8 +8,7 @@
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Currency {
     private static WeightedGraph currencyGraph = new WeightedGraph();
@@ -31,7 +30,7 @@ public class Currency {
                     startOfFile = true;
 
                 if (startOfFile && line.length() > 0 && Character.isAlphabetic(line.charAt(0))) {
-                    String data[] = line.split("\\s+");
+                    String[] data = line.split("\\s+");
                     String fromCurrency = data[0];
                     String toCurrency = data[1];
                     double exchangeRate = Double.parseDouble(data[2]);
@@ -67,7 +66,7 @@ public class Currency {
     private void addNodeToGraph(String currency) {
         if (getSpecifiedNode(currency) == null) {
             WeightedGraph.Node temp = new WeightedGraph.Node(currency);
-            currencyGraph.addVertex(temp);
+            currencyGraph.addNode(temp);
         }
     }
 
@@ -77,10 +76,10 @@ public class Currency {
      * if not, then it will return null
      */
     private WeightedGraph.Node getSpecifiedNode(String currency) {
-        List<WeightedGraph.Node> existingNodes = currencyGraph.getVertices();
-        for (int i = 0; i < existingNodes.size(); i++) {
-            if (existingNodes.get(i).getCurrencyLabel().equals(currency)) {
-                return existingNodes.get(i);
+        List<WeightedGraph.Node> existingNodes = currencyGraph.getNodes();
+        for (WeightedGraph.Node existingNode : existingNodes) {
+            if (existingNode.getCurrencyLabel().equals(currency)) {
+                return existingNode;
             }
         }
         return null;
@@ -106,20 +105,30 @@ public class Currency {
         toCurrencyNode.addEdge(edge2);
     }
 
-    private void getTradeSequences() {
+    /*
+     * For the start currency, will go through each of its edges and calculate (investment * exchange rate),
+     * will return the a HashMap where corresponding edge and its currency exchange is represented
+     */
+    private Map<WeightedGraph.Edge, Double> getCurrencyExchanges(WeightedGraph.Node startCurrency, double investment) {
+        Map<WeightedGraph.Edge, Double> currencyExchanges = new HashMap<>();
 
+        List<WeightedGraph.Edge> edges = startCurrency.getEdges();
+        for (WeightedGraph.Edge edge : edges) {
+            currencyExchanges.put(edge, investment * edge.getExchangeRate());
+        }
+
+        return currencyExchanges;
     }
 
     public static void main (String[] args) {
         Currency runner = new Currency();
         runner.readFile();
-        List<WeightedGraph.Node> nodes = currencyGraph.getVertices();
-        for (int i = 0; i < nodes.size(); i++) {
-            System.out.println(nodes.get(i).getCurrencyLabel());
-            List<WeightedGraph.Edge> edges = nodes.get(i).getEdges();
-            for (int j = 0; j < edges.size(); j++) {
-                System.out.println(edges.get(j).getExchangeRate());
-            }
+        Map<WeightedGraph.Edge, Double> currencyExchanges = runner.getCurrencyExchanges(currencyGraph.getNodes().get(0), 1000);
+        Iterator iterator = currencyExchanges.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            System.out.println(entry.getKey().toString());
+            System.out.println(entry.getValue().toString());
         }
     }
 }
