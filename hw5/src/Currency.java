@@ -139,8 +139,8 @@ public class Currency {
             exchanges.put(list, amount);
         } else {
             List<WeightedGraph.Edge> toNodeEdges = toNode.getEdges();
-            for (int i = 0; i < toNodeEdges.size(); i++) {
-                getAllCurrencyExchanges(new ArrayList(list), toNodeEdges.get(i), level);
+            for (WeightedGraph.Edge toNodeEdge : toNodeEdges) {
+                getAllCurrencyExchanges(new ArrayList(list), toNodeEdge, level);
             }
         }
     }
@@ -152,8 +152,8 @@ public class Currency {
      */
     private double calculateCurrencyExchanges(ArrayList<WeightedGraph.Edge> list, double startingInvestment) {
         double amount = startingInvestment;
-        for (int i = 0; i < list.size(); i++) {
-            double exchangeRate = list.get(i).getExchangeRate();
+        for (WeightedGraph.Edge edge : list) {
+            double exchangeRate = edge.getExchangeRate();
             amount = amount * exchangeRate;
         }
         return amount;
@@ -164,7 +164,7 @@ public class Currency {
      * looks for specified starting currency node,
      * will get each of its edge to look for all exchange paths
      */
-    public static void main (String[] args) {
+    public static void main (String[] args) throws NullPointerException {
         Currency runner = new Currency();
         runner.readFile();
 
@@ -174,11 +174,9 @@ public class Currency {
             runner.getAllCurrencyExchanges(temp, start.getEdges().get(i), 0);
         }
 
-        Iterator iterator = exchanges.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry entry = (Map.Entry) iterator.next();
-            System.out.println(entry.getKey().toString());
-            System.out.println(entry.getValue().toString());
+        for (Map.Entry<ArrayList<WeightedGraph.Edge>, Double> arrayListDoubleEntry : exchanges.entrySet()) {
+            System.out.println(((Map.Entry) arrayListDoubleEntry).getKey().toString());
+            System.out.println(((Map.Entry) arrayListDoubleEntry).getValue().toString());
             System.out.println("*************************");
         }
     }
