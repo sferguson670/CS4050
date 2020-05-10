@@ -12,9 +12,9 @@ import java.util.*;
 
 public class Currency {
     private static WeightedGraph currencyGraph = new WeightedGraph();
-    private static Map<ArrayList<WeightedGraph.Edge>, Double> exchanges = new HashMap<>();
-    private static String INPUT_FILE = "exchangeRatesTest.txt";
-    private static String startingCountry = "Canada";
+    private static ArrayList<ArrayList<WeightedGraph.Edge>> exchanges = new ArrayList<>();
+    private static String INPUT_FILE = "exchangeRatesF2016.txt";
+    private static String startingCountry = "Dollar";
     private static double startingInvestment = 1000;
     private static int numOfCurrencies;
 
@@ -135,8 +135,7 @@ public class Currency {
         WeightedGraph.Node toNode = exchange.getToNode();
 
         if (toNode.getCurrencyLabel().equals(startingCountry)) {
-            double amount = calculateCurrencyExchanges(list, startingInvestment);
-            exchanges.put(list, amount);
+            exchanges.add(list);
         } else {
             List<WeightedGraph.Edge> toNodeEdges = toNode.getEdges();
             for (WeightedGraph.Edge toNodeEdge : toNodeEdges) {
@@ -160,6 +159,22 @@ public class Currency {
     }
 
     /*
+     * Goes through each list in the path and computes the value gained through exchanges,
+     * if greater than the initial investment, then the profit and path is printed out
+     */
+    private void printsOutResults() {
+        exchanges.forEach(exchange -> {
+            double amount = calculateCurrencyExchanges(exchange, startingInvestment);
+            double profit = amount - startingInvestment;
+            if (profit > 0) {
+                System.out.println("Profit earned: " + profit);
+                System.out.println(exchange);
+                System.out.println("*************************");
+            }
+        });
+    }
+
+    /*
      * After building the weighted graph from file,
      * looks for specified starting currency node,
      * will get each of its edge to look for all exchange paths
@@ -174,10 +189,6 @@ public class Currency {
             runner.getAllCurrencyExchanges(temp, start.getEdges().get(i), 0);
         }
 
-        for (Map.Entry<ArrayList<WeightedGraph.Edge>, Double> arrayListDoubleEntry : exchanges.entrySet()) {
-            System.out.println(((Map.Entry) arrayListDoubleEntry).getKey().toString());
-            System.out.println(((Map.Entry) arrayListDoubleEntry).getValue().toString());
-            System.out.println("*************************");
-        }
+        runner.printsOutResults();
     }
 }

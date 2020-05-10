@@ -74,7 +74,7 @@ public class WeightedGraph {
         }
 
         public String toString() {
-            return "currency: " + currencyLabel;
+            return currencyLabel;
         }
     }
 
@@ -120,7 +120,7 @@ public class WeightedGraph {
          * Prints out exchange rate and what node it goes to
          */
         public String toString() {
-            return "comes from " + fromNode.toString() + " -> exchange rate: "
+            return fromNode.toString() + " -> "
                     + exchangeRate + " -> " + toNode.toString();
         }
     }
