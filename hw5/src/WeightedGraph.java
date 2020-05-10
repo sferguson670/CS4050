@@ -81,16 +81,14 @@ public class WeightedGraph {
     /*
      * Class to represent an edge of the weighted graph,
      * will contain the exchange rate,
-     * and will contain what node it connects to
+     * the node it comes from,
+     * and what node it connects to
      */
     static class Edge {
         private Node fromNode;
         private Node toNode;
         private double exchangeRate;
 
-        /*
-         * Initializer
-         */
         public Edge(Node fromNode, Node toNode, double currencyRate) {
             this.fromNode = fromNode;
             this.toNode = toNode;
